@@ -1,0 +1,12 @@
+- name: Install webserver programs
+  apt:
+    name: "{{ ['apache2', 'php7.0-fpm', 'sslh', 'openvpn', 'letsencrypt', 'fail2ban', 'bind9'] }}"
+    state: present
+
+
+- name: Enable apache2 modules
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ ['ssl', 'proxy', 'proxy_fcgi', 'http2'] }}"
+

@@ -1,0 +1,9 @@
+# Playbook to setup my home server
+
+
+- name: Home server install
+  hosts: server
+  remote_user: root
+  roles:
+    - webserver
+
