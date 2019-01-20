@@ -28,6 +28,9 @@
     - { name: 'jbh', uid: 1000, group: 'jbh', home: '/home/jbh', groups: 'sudo', shell: '/bin/bash', password: '$6$QEmOr9SX$fXxwROHbfCfJs/zEVmzACiqPQxVtDA/FbCN3utTxrr/ZWx7FfC2WIQPeTwK7rQym2t0qQjk2NCIXSmn4X3G9d0' }
     - { name: 'jb_dedi_web', uid: 2000, group: 'jb_dedi_web', home: '/home/www/jb_dedi_web', groups: 'www, sftp', shell: '/bin/bash', password: '!' }
 
+- name: Add group to user www-data
+  user: name=www-data groups='jb_dedi_web'
+
 - name: Install webserver programs
   apt:
     name: "{{ ['apache2', 'php7.0-fpm', 'sslh', 'openvpn', 'letsencrypt', 'fail2ban', 'bind9', 'mariadb-server-10.1'] }}"
@@ -35,7 +38,7 @@
 
 - name: Install php modules
   apt:
-    name: "{{ ['php7.0-mysql', 'php-apcu', 'php7.0-pgsql'] }}"
+    name: "{{ ['php7.0-mysql', 'php-apcu', 'php7.0-pgsql', 'php7.0-intl', 'php7.0-xml', 'php7.0-gd', 'php7.0-curl', 'php7.0-zip', 'php7.0-mbstring', 'php7.0-ldap', 'php7.0-imap', 'php7.0-sqlite3', 'php7.0-bz2'] }}"
     state: present
 
 - name: Install apache2 modules
@@ -54,6 +57,19 @@
     - apcu
     - pgsql
     - json
+    - intl
+    - simplexml
+    - xmlreader
+    - xmlwriter
+    - xml
+    - gd
+    - curl
+    - zip
+    - mbstring
+    - ldap
+    - imap
+    - sqlite3
+    - bz2
 
 # Set ip forwarding on in /proc and in the sysctl file and reload if necessary
 - sysctl:
