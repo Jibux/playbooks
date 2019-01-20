@@ -1,0 +1,1 @@
+backup -fstype=nfs nas:/volume1/JIBUX-SERVER

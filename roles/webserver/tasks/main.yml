@@ -89,6 +89,9 @@
     - { src: 'jb_dedi_web.conf', dest: '/etc/php/7.0/fpm/pool.d/jb_dedi_web.conf', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'php-fpm.conf', dest: '/etc/php/7.0/fpm/php-fpm.conf', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'php.ini', dest: '/etc/php/7.0/fpm/php.ini', owner: 'root', group: 'root', mode: '0644' }
+    - { src: 'apache2-private', dest: '/etc/logrotate.d/apache2-private', owner: 'root', group: 'root', mode: '0644' }
+    - { src: 'renew_lets_encrypt', dest: '/etc/logrotate.d/renew_lets_encrypt', owner: 'root', group: 'root', mode: '0644' }
+    - { src: 'openvpn', dest: '/etc/logrotate.d/openvpn', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'sslh', dest: '/etc/default/sslh', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'my.cnf', dest: '/etc/mysql/my.cnf', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'rules.v4', dest: '/etc/iptables/rules.v4', owner: 'root', group: 'root', mode: '0644' }

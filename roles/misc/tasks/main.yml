@@ -1,0 +1,19 @@
+# NOT WORKING YET
+
+- name: Create directories
+  file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} state=directory
+  with_items:
+    - { path: '/mnt/backup', owner: 'root', group: 'root', mode: '0700' }
+
+- name: install autofs
+  apt: name=autofs state=present
+
+- name: Setup configuration file
+  copy: owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} src={{ item.src }} dest={{ item.dest }}
+  with_items: 
+    - { src: 'auto.mnt', dest: '/etc/auto.mnt', owner: 'root', group: 'root', mode: '0644' }
+    - { src: 'auto.master', dest: '/etc/auto.master', owner: 'root', group: 'root', mode: '0644' }
+
+- name: Restart autofs
+  systemd: state=restarted enabled=yes name=autofs
+
