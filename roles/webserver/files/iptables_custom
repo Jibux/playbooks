@@ -1,0 +1,28 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          iptables_custom
+# Required-Start:    fail2ban
+# Required-Stop:     
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Load / save iptable depending which runlevel we are.
+### END INIT INFO
+
+# Author: Jean-Baptiste Hugon
+
+
+[ $# -ne 1 ] && echo "Usage: $0 start|stop" && exit 1
+
+ACTION=$1
+
+case "${ACTION}" in
+	start )
+		/home/data/scripts/iptables/iptables.sh load
+		;;
+	stop )
+		/home/data/scripts/iptables/iptables.sh save
+		;;
+	* )
+		echo "Usage: $0 start|stop" ;;
+esac
+
