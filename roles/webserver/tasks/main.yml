@@ -33,7 +33,7 @@
 
 - name: Install webserver programs
   apt:
-    name: "{{ ['apache2', 'php7.0-fpm', 'sslh', 'openvpn', 'letsencrypt', 'fail2ban', 'bind9', 'mariadb-server-10.1'] }}"
+    name: "{{ ['apache2', 'php7.0-fpm', 'sslh', 'openvpn', 'iptables-persistent', 'letsencrypt', 'fail2ban', 'bind9', 'mariadb-server-10.1'] }}"
     state: present
 
 - name: Install php modules
@@ -96,7 +96,6 @@
     - { src: 'my.cnf', dest: '/etc/mysql/my.cnf', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'rules.v4', dest: '/etc/iptables/rules.v4', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'rules.v6', dest: '/etc/iptables/rules.v6', owner: 'root', group: 'root', mode: '0644' }
-    - { src: 'iptables_custom', dest: '/etc/init.d/iptables_custom', owner: 'root', group: 'root', mode: '0755' }
     - { src: 'sudoers', dest: '/etc/sudoers', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'sshd_config', dest: '/etc/ssh/sshd_config', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'interfaces', dest: '/etc/network/interfaces', owner: 'root', group: 'root', mode: '0644' }
