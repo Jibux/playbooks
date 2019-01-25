@@ -86,6 +86,7 @@
     - { src: 'ports.conf', dest: '/etc/apache2/ports.conf', owner: 'root', group: 'root', mode: '0644' }
     - { src: '000-default.conf', dest: '/etc/apache2/sites-available/000-default.conf', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'jibux.info.conf', dest: '/etc/apache2/sites-available/jibux.info.conf', owner: 'root', group: 'root', mode: '0644' }
+    - { src: 'security.conf', dest: '/etc/apache2/conf-available/security.conf', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'jb_dedi_web.conf', dest: '/etc/php/7.0/fpm/pool.d/jb_dedi_web.conf', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'php-fpm.conf', dest: '/etc/php/7.0/fpm/php-fpm.conf', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'php.ini', dest: '/etc/php/7.0/fpm/php.ini', owner: 'root', group: 'root', mode: '0644' }

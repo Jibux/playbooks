@@ -11,9 +11,15 @@ iface lo inet loopback
 allow-hotplug eth0
 iface eth0 inet dhcp
 	# For sslh transparent proxying
+	# Configure routing for those marked packets
 	post-up /sbin/ip rule add fwmark 0x1 lookup 100
 	post-up /sbin/ip route add local 0.0.0.0/0 dev lo table 100
 
 
 # This is an autoconfigured IPv6 interface
 iface eth0 inet6 auto
+	# For sslh transparent proxying
+	# Configure routing for those marked packets
+	post-up /sbin/ip -6 rule add fwmark 0x1 lookup 100
+	post-up /sbin/ip -6 route add local ::/0 dev lo table 100
+

@@ -16,4 +16,4 @@ RUN=no
 DAEMON=/usr/sbin/sslh
 
 #DAEMON_OPTS="--user sslh --listen 192.168.0.200:443 --ssh 127.0.0.1:22 --ssl 127.0.0.1:443 --pidfile /var/run/sslh/sslh.pid"
-DAEMON_OPTS="--transparent --user sslh --listen 192.168.0.200:443 --ssl 192.168.0.200:4443 --openvpn 192.168.0.200:8443 --pidfile /var/run/sslh/sslh.pid"
+DAEMON_OPTS="--transparent --user sslh --listen 192.168.0.200:443 --listen 127.0.0.1:443 --ssl 192.168.0.200:4443 --openvpn 192.168.0.200:8443 --pidfile /var/run/sslh/sslh.pid"

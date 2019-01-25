@@ -6,14 +6,22 @@
 - name: Create directories
   file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} state=directory
   with_items:
-    - { path: '/mnt/backup', owner: 'root', group: 'root', mode: '0700' }
+#    - { path: '/mnt/backup', owner: 'root', group: 'root', mode: '0750' }
+    - { path: '/var/log/backup', owner: 'root', group: 'root', mode: '0755' }
 
-- name: Setup configuration file
+- name: Setup configuration file for autofs
   copy: owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} src={{ item.src }} dest={{ item.dest }}
   with_items: 
     - { src: 'auto.mnt', dest: '/etc/auto.mnt', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'auto.master', dest: '/etc/auto.master', owner: 'root', group: 'root', mode: '0644' }
+  register: autofs_conf
 
 - name: Restart autofs
   systemd: state=restarted enabled=yes name=autofs
+  when: autofs_conf.changed
+
+- name: Setup cron
+  copy: owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} src={{ item.src }} dest={{ item.dest }}
+  with_items: 
+    - { src: 'cron_root', dest: '/var/spool/cron/crontabs/root', owner: 'root', group: 'crontab', mode: '600' }
 
