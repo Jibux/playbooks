@@ -96,6 +96,7 @@
     - { src: 'my.cnf', dest: '/etc/mysql/my.cnf', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'rules.v4', dest: '/etc/iptables/rules.v4', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'rules.v6', dest: '/etc/iptables/rules.v6', owner: 'root', group: 'root', mode: '0644' }
+    - { src: 'f2b_jail.local', dest: '/etc/fail2ban/jail.local', owner: 'root', group: 'root', mode: '0640' }
     - { src: 'sudoers', dest: '/etc/sudoers', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'sshd_config', dest: '/etc/ssh/sshd_config', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'interfaces', dest: '/etc/network/interfaces', owner: 'root', group: 'root', mode: '0644' }
@@ -155,7 +156,7 @@
   when: config_webserver.changed
 
 - name: Restart services - start (3/3)
-  systemd: state=started enabled=yes name={{ item }}
+  systemd: state=started name={{ item }}
   with_items:
     - openvpn
     - apache2

@@ -8,6 +8,15 @@
   shell: apt-file update
   when: tools_installed.changed
 
+- name: Set timezone to Europe/Paris
+  timezone:
+    name: Europe/Paris
+  register: timezone_setup
+
+- name: Restart crond
+  systemd: state=restarted name=cron
+  when: timezone_setup.changed
+
 - name: Create directories
   file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} state=directory
   with_items:
@@ -20,6 +29,7 @@
     - { src: 'hosts', dest: '/etc/hosts', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'vimrc', dest: '/etc/vim/vimrc', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'root_bashrc', dest: '/root/.bashrc', owner: 'root', group: 'root', mode: '0644' }
+    - { src: '.selected_editor', dest: '/root/.selected_editor', owner: 'root', group: 'root', mode: '0644' }
 
 - name: Setup configuration file for autofs
   copy: owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} src={{ item.src }} dest={{ item.dest }}
