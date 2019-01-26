@@ -1,13 +1,25 @@
 - name: Install tools
   apt:
-    name: "{{ ['vim', 'autofs', 'mlocate', 'tcpdump'] }}"
+    name: "{{ ['vim', 'autofs', 'mlocate', 'tcpdump', 'apt-file'] }}"
     state: present
+  register: tools_installed
+
+- name: Run apt-file update
+  shell: apt-file update
+  when: tools_installed.changed
 
 - name: Create directories
   file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} state=directory
   with_items:
 #    - { path: '/mnt/backup', owner: 'root', group: 'root', mode: '0750' }
     - { path: '/var/log/backup', owner: 'root', group: 'root', mode: '0755' }
+
+- name: Setup misc configuration files
+  copy: owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} src={{ item.src }} dest={{ item.dest }}
+  with_items: 
+    - { src: 'hosts', dest: '/etc/hosts', owner: 'root', group: 'root', mode: '0644' }
+    - { src: 'vimrc', dest: '/etc/vim/vimrc', owner: 'root', group: 'root', mode: '0644' }
+    - { src: 'root_bashrc', dest: '/root/.bashrc', owner: 'root', group: 'root', mode: '0644' }
 
 - name: Setup configuration file for autofs
   copy: owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} src={{ item.src }} dest={{ item.dest }}

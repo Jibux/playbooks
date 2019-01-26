@@ -1,6 +1,6 @@
 - name: Install postfix
   apt:
-    name: "{{ ['postfix'] }}"
+    name: "{{ ['postfix', 'postfix-mysql', 'postfix-pcre', 'mailutils'] }}"
     state: present
 
 - name: Create ssl directory
@@ -11,9 +11,10 @@
 - name: Setup configuration file for postfix
   copy: owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} src={{ item.src }} dest={{ item.dest }}
   with_items: 
-    - { src: 'master.cf', dest: '/etc/postfix/master.cf', owner: 'root', group: 'root', mode: '0644' }
-    - { src: 'main.cf', dest: '/etc/postfix/main.cf', owner: 'root', group: 'root', mode: '0644' }
-    - { src: 'canonical.recipient', dest: '/etc/postfix/canonical.recipient', owner: 'root', group: 'root', mode: '0644' }
+    - { src: 'master.cf', dest: '/etc/postfix/', owner: 'root', group: 'root', mode: '0644' }
+    - { src: 'main.cf', dest: '/etc/postfix/', owner: 'root', group: 'root', mode: '0644' }
+    - { src: 'canonical.recipient', dest: '/etc/postfix/', owner: 'root', group: 'root', mode: '0644' }
+    - { src: 'smtp_reply_filter', dest: '/etc/postfix/', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'mysql-virtual_domains.cf', dest: '/etc/postfix/', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'mysql-virtual_email2email.cf', dest: '/etc/postfix/', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'mysql-virtual_forwardings.cf', dest: '/etc/postfix/', owner: 'root', group: 'root', mode: '0644' }
@@ -21,12 +22,13 @@
     - { src: 'mysql-virtual_mailbox_limit_maps.cf', dest: '/etc/postfix/', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'mysql-virtual_transports.cf', dest: '/etc/postfix/', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'mailname', dest: '/etc/mailname', owner: 'root', group: 'root', mode: '0644' }
+    - { src: 'aliases', dest: '/etc/aliases', owner: 'root', group: 'root', mode: '0644' }
   register: postfix_conf
 
   # TODO: take care of the certificates
 
 - name: Reload postfix config
-  shell: postmap /etc/postfix/canonical.recipient
+  shell: postmap /etc/postfix/canonical.recipient && newaliases
   when: postfix_conf.changed
 
 - name: Restart postfix
