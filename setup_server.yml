@@ -5,7 +5,7 @@
   hosts: server
   remote_user: root
   roles:
+    - misc
     - webserver
     - mailserver
-    - misc
 

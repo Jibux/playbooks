@@ -1,6 +1,36 @@
+- name: Create directories
+  file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} state=directory
+  with_items:
+    - { path: '/home/www', owner: 'root', group: 'root', mode: '0751' }
+    - { path: '/etc/iptables', owner: 'root', group: 'root', mode: '0755' }
+
+- name: Remove some users
+  user: name={{ item.name }} state=absent remove=yes
+  with_items:
+    - { name: 'pi' }
+
+- name: Remove some groups
+  group: name={{ item.name }} state=absent
+  with_items:
+    - { name: 'pi' }
+
+- name: Create groups
+  group: name={{ item.name }} gid={{ item.gid }} state=present
+  with_items:
+    - { name: 'www', gid: 6000 }
+    - { name: 'sftp', gid: 6001 }
+    - { name: 'jbh', gid: 1000 }
+    - { name: 'jb_dedi_web', gid: 2000 }
+
+- name: Create users
+  user: name={{ item.name }} uid={{ item.uid }} group={{ item.group }} groups={{ item.groups }} home={{ item.home }} shell={{ item.shell }} password={{ item.password }}
+  with_items:
+    - { name: 'jbh', uid: 1000, group: 'jbh', home: '/home/jbh', groups: 'sudo', shell: '/bin/bash', password: '$6$QEmOr9SX$fXxwROHbfCfJs/zEVmzACiqPQxVtDA/FbCN3utTxrr/ZWx7FfC2WIQPeTwK7rQym2t0qQjk2NCIXSmn4X3G9d0' }
+    - { name: 'jb_dedi_web', uid: 2000, group: 'jb_dedi_web', home: '/home/www/jb_dedi_web', groups: 'www, sftp', shell: '/bin/bash', password: '!' }
+
 - name: Install tools
   apt:
-    name: "{{ ['vim', 'autofs', 'mlocate', 'tcpdump', 'apt-file'] }}"
+    name: "{{ ['vim', 'autofs', 'mlocate', 'tcpdump', 'apt-file', 'unattended-upgrades'] }}"
     state: present
   register: tools_installed
 
@@ -30,6 +60,14 @@
     - { src: 'vimrc', dest: '/etc/vim/vimrc', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'root_bashrc', dest: '/root/.bashrc', owner: 'root', group: 'root', mode: '0644' }
     - { src: '.selected_editor', dest: '/root/.selected_editor', owner: 'root', group: 'root', mode: '0644' }
+    - { src: '50unattended-upgrades', dest: '/etc/apt/apt.conf.d/50unattended-upgrades', owner: 'root', group: 'root', mode: '0644' }
+  register: config_misc
+
+- name: Restart misc services
+  systemd: state=restarted enabled=yes name={{ item }}
+  with_items:
+    - unattended-upgrades
+  when: config_misc.changed
 
 - name: Setup configuration file for autofs
   copy: owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} src={{ item.src }} dest={{ item.dest }}
@@ -46,4 +84,9 @@
   copy: owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} src={{ item.src }} dest={{ item.dest }}
   with_items: 
     - { src: 'cron_root', dest: '/var/spool/cron/crontabs/root', owner: 'root', group: 'crontab', mode: '600' }
+
+- name: Untar home from backup
+  shell: cd / && tar -xzf /mnt/backup/last_backup.tgz home/
+  when: first_install is defined and first_install == True
+
 
