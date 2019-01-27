@@ -87,6 +87,6 @@
 
 - name: Untar home from backup
   shell: cd / && tar -xzf /mnt/backup/last_backup.tgz home/
-  when: first_install is defined and first_install == True
+  when: first_install is defined and first_install == "yes"
 
 

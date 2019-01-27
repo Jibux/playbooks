@@ -5,7 +5,7 @@ Usage
 -----
 * To play the first time do:
 ```bash
-ansible-playbook -c ssh setup_server.yml --extra-vars="first_install=True"
+ansible-playbook -c ssh setup_server.yml --extra-vars "first_install=yes"
 ```
 * Otherwise just do:
 ```bash

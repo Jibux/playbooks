@@ -74,7 +74,7 @@
 
 - name: Untar debian.cnf files from backup
   shell: cd / && tar -xzf /mnt/backup/last_backup.tgz etc/mysql/debian.cnf
-  when: first_install is defined and first_install == True
+  when: first_install is defined and first_install == "yes"
 
 - name: Setup logrotate files
   copy: owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} src={{ item.src }} dest={{ item.dest }}
