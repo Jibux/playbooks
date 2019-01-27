@@ -25,7 +25,7 @@
   register: postfix_ssl_certificate
 
 - name: Untar /etc/postfix/ssl files from backup
-  shell: cd / && tar -xzf /mnt/backup/last_backup.tgz etc/postfix/ssl
+  shell: cd / && tar --occurrence -xzf /mnt/backup/last_backup.tgz etc/postfix/ssl
   when: postfix_ssl_certificate.stat.isreg is not defined
 
 - name: Reload postfix config

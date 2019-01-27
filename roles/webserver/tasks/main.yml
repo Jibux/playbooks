@@ -73,7 +73,7 @@
   register: config_webserver
 
 - name: Untar debian.cnf files from backup
-  shell: cd / && tar -xzf /mnt/backup/last_backup.tgz etc/mysql/debian.cnf
+  shell: cd / && tar --occurrence -xzf /mnt/backup/last_backup.tgz etc/mysql/debian.cnf
   when: first_install is defined and first_install == "yes"
 
 - name: Setup logrotate files
