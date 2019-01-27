@@ -6,12 +6,6 @@
     name: "{{ ['apache2', 'php7.0-fpm', 'sslh', 'openvpn', 'iptables-persistent', 'letsencrypt', 'fail2ban', 'bind9', 'mariadb-server-10.1'] }}"
     state: present
 
-- name: Install php modules
-  apt:
-    name: "{{ ['php7.0-mysql', 'php-apcu', 'php7.0-pgsql', 'php7.0-intl', 'php7.0-xml', 'php7.0-gd', 'php7.0-curl', 'php7.0-zip', 'php7.0-mbstring', 'php7.0-ldap', 'php7.0-imap', 'php7.0-sqlite3', 'php7.0-bz2'] }}"
-    state: present
-  register: php_modules_insalled
-
 - name: Install apache2 modules
   apt:
     name: "{{ ['libapache2-mod-wsgi'] }}"
@@ -21,12 +15,17 @@
   apache2_module: name={{ item }} state=present ignore_configcheck=yes
   loop: "{{ ['headers', 'rewrite', 'wsgi', 'ssl', 'proxy', 'proxy_fcgi', 'http2'] }}"
 
+- name: Install php modules
+  apt:
+    name: "{{ ['php7.0-mysql', 'php-apcu', 'php7.0-intl', 'php7.0-xml', 'php7.0-gd', 'php7.0-curl', 'php7.0-zip', 'php7.0-mbstring', 'php7.0-ldap', 'php7.0-imap', 'php7.0-sqlite3', 'php7.0-bz2'] }}"
+    state: present
+  register: php_modules_insalled
+
 - name: Enable php modules
   shell: phpenmod {{ item }}
   with_items:
     - mysql
     - apcu
-    - pgsql
     - json
     - intl
     - simplexml
