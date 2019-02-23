@@ -6,6 +6,11 @@
     name: "{{ ['apache2', 'php7.0-fpm', 'sslh', 'openvpn', 'iptables-persistent', 'letsencrypt', 'fail2ban', 'bind9', 'mariadb-server-10.1'] }}"
     state: present
 
+- name: Install Python modules
+  apt:
+    name: "{{ ['python3-bottle', 'python3-simplejson'] }}"
+    state: present
+
 - name: Install apache2 modules
   apt:
     name: "{{ ['libapache2-mod-wsgi'] }}"
@@ -13,7 +18,7 @@
 
 - name: Enable apache2 modules
   apache2_module: name={{ item }} state=present ignore_configcheck=yes
-  loop: "{{ ['headers', 'rewrite', 'wsgi', 'ssl', 'proxy', 'proxy_fcgi', 'http2'] }}"
+  loop: "{{ ['headers', 'rewrite', 'wsgi', 'ssl', 'proxy', 'proxy_http', 'proxy_fcgi', 'http2'] }}"
 
 - name: Install php modules
   apt:

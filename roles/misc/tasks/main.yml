@@ -30,7 +30,7 @@
 
 - name: Install tools
   apt:
-    name: "{{ ['vim', 'autofs', 'mlocate', 'tcpdump', 'apt-file', 'unattended-upgrades', 'sysstat'] }}"
+    name: "{{ ['vim', 'autofs', 'mlocate', 'tcpdump', 'apt-file', 'unattended-upgrades', 'sysstat', 'git'] }}"
     state: present
   register: tools_installed
 
