@@ -13,7 +13,7 @@
 
 - name: Install apache2 modules
   apt:
-    name: "{{ ['libapache2-mod-wsgi'] }}"
+    name: "{{ ['libapache2-mod-wsgi-py3'] }}"
     state: present
 
 - name: Enable apache2 modules
