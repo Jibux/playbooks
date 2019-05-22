@@ -5,7 +5,7 @@ COPY_CMD="rsync -a"
 HOST="jibux-server"
 
 copy() {
-	$COPY_CMD $HOST:$2 roles/$1/files/$3
+	$COPY_CMD root@$HOST:$2 roles/$1/files/$3
 }
 
 copy raspberry /etc/modprobe.d/raspi-blacklist.conf raspi-blacklist.conf
