@@ -5,7 +5,8 @@
   hosts: server
   remote_user: root
   roles:
+    - raspberry
     - misc
-    - webserver
-    - mailserver
+      #    - webserver
+      #    - mailserver
 

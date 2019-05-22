@@ -1,0 +1,20 @@
+- name: Remove some users
+  user: name={{ item.name }} state=absent remove=yes
+  with_items:
+    - { name: 'pi' }
+
+- name: Remove some groups
+  group: name={{ item.name }} state=absent
+  with_items:
+    - { name: 'pi' }
+
+
+- name: Disable Wifi (stop and disable services)
+  systemd: state=stopped enabled=no name={{ item }}
+  with_items:
+    - wpa_supplicant
+    - bluetooth
+
+- name: Disable Wifi (if changed, requires reboot)
+  copy: src=raspi-blacklist.conf dest=/etc/modprobe.d/raspi-blacklist.conf owner=root group=root mode=0644
+

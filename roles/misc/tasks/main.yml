@@ -4,16 +4,6 @@
     - { path: '/home/www', owner: 'root', group: 'root', mode: '0751' }
     - { path: '/etc/iptables', owner: 'root', group: 'root', mode: '0755' }
 
-- name: Remove some users
-  user: name={{ item.name }} state=absent remove=yes
-  with_items:
-    - { name: 'pi' }
-
-- name: Remove some groups
-  group: name={{ item.name }} state=absent
-  with_items:
-    - { name: 'pi' }
-
 - name: Create groups
   group: name={{ item.name }} gid={{ item.gid }} state=present
   with_items:
@@ -30,7 +20,7 @@
 
 - name: Install tools
   apt:
-    name: "{{ ['vim', 'autofs', 'mlocate', 'tcpdump', 'apt-file', 'unattended-upgrades', 'sysstat', 'git', 'lvm2', 'smartmontools'] }}"
+    name: "{{ ['vim', 'autofs', 'mlocate', 'tcpdump', 'apt-file', 'unattended-upgrades', 'sysstat', 'git', 'lvm2', 'smartmontools', 'hdparm'] }}"
     state: present
   register: tools_installed
 
@@ -61,7 +51,14 @@
     - { src: 'root_bashrc', dest: '/root/.bashrc', owner: 'root', group: 'root', mode: '0644' }
     - { src: '.selected_editor', dest: '/root/.selected_editor', owner: 'root', group: 'root', mode: '0644' }
     - { src: '50unattended-upgrades', dest: '/etc/apt/apt.conf.d/50unattended-upgrades', owner: 'root', group: 'root', mode: '0644' }
+    - { src: 'hdparm.conf', dest: '/etc/hdparm.conf', owner: 'root', group: 'root', mode: '0644' }
   register: config_misc
+
+- name: Disable and stop services
+  systemd: state=stopped enabled=no name={{ item }}
+  with_items:
+    - smartmontools
+    - smartd
 
 - name: Restart misc services
   systemd: state=restarted enabled=yes name={{ item }}
