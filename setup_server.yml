@@ -7,6 +7,6 @@
   roles:
     - raspberry
     - misc
-      #    - webserver
-      #    - mailserver
+    - webserver
+    - mailserver
 
