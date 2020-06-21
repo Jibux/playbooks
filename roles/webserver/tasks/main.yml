@@ -3,7 +3,7 @@
 
 - name: Install webserver programs
   apt:
-    name: "{{ ['apache2', 'php7.0-fpm', 'sslh', 'openvpn', 'iptables-persistent', 'letsencrypt', 'fail2ban', 'bind9', 'mariadb-server-10.1'] }}"
+    name: "{{ ['apache2', 'php7.3-fpm', 'sslh', 'openvpn', 'iptables-persistent', 'letsencrypt', 'fail2ban', 'bind9', 'mariadb-server-10.1'] }}"
     state: present
 
 - name: Install Python modules
@@ -22,7 +22,7 @@
 
 - name: Install php modules
   apt:
-    name: "{{ ['php7.0-mysql', 'php-apcu', 'php7.0-intl', 'php7.0-xml', 'php7.0-gd', 'php7.0-curl', 'php7.0-zip', 'php7.0-mbstring', 'php7.0-ldap', 'php7.0-imap', 'php7.0-sqlite3', 'php7.0-bz2'] }}"
+    name: "{{ ['php7.3-mysql', 'php-apcu', 'php7.3-intl', 'php7.3-xml', 'php7.3-gd', 'php7.3-curl', 'php7.3-zip', 'php7.3-mbstring', 'php7.3-ldap', 'php7.3-imap', 'php7.3-sqlite3', 'php7.3-bz2'] }}"
     state: present
   register: php_modules_insalled
 
@@ -50,7 +50,7 @@
 # Set ip forwarding on in /proc and in the sysctl file and reload if necessary
 - sysctl:
     name: net.ipv4.ip_forward
-    value: 1
+    value: "1"
     sysctl_set: yes
     state: present
     reload: yes
@@ -63,15 +63,15 @@
     - { src: '000-default.conf', dest: '/etc/apache2/sites-available/000-default.conf', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'jibux.info.conf', dest: '/etc/apache2/sites-available/jibux.info.conf', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'security.conf', dest: '/etc/apache2/conf-available/security.conf', owner: 'root', group: 'root', mode: '0644' }
-    - { src: 'jb_dedi_web.conf', dest: '/etc/php/7.0/fpm/pool.d/jb_dedi_web.conf', owner: 'root', group: 'root', mode: '0644' }
-    - { src: 'php-fpm.conf', dest: '/etc/php/7.0/fpm/php-fpm.conf', owner: 'root', group: 'root', mode: '0644' }
-    - { src: 'php.ini', dest: '/etc/php/7.0/fpm/php.ini', owner: 'root', group: 'root', mode: '0644' }
+    - { src: 'jb_dedi_web.conf', dest: '/etc/php/7.3/fpm/pool.d/jb_dedi_web.conf', owner: 'root', group: 'root', mode: '0644' }
+    - { src: 'php-fpm.conf', dest: '/etc/php/7.3/fpm/php-fpm.conf', owner: 'root', group: 'root', mode: '0644' }
+    - { src: 'php.ini', dest: '/etc/php/7.3/fpm/php.ini', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'sslh', dest: '/etc/default/sslh', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'my.cnf', dest: '/etc/mysql/my.cnf', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'rules.v4', dest: '/etc/iptables/rules.v4', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'rules.v6', dest: '/etc/iptables/rules.v6', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'f2b_jail.local', dest: '/etc/fail2ban/jail.local', owner: 'root', group: 'root', mode: '0640' }
-    - { src: 'sudoers', dest: '/etc/sudoers', owner: 'root', group: 'root', mode: '0644' }
+    - { src: 'sudoers', dest: '/etc/sudoers', owner: 'root', group: 'root', mode: '0440' }
     - { src: 'sshd_config', dest: '/etc/ssh/sshd_config', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'interfaces', dest: '/etc/network/interfaces', owner: 'root', group: 'root', mode: '0644' }
   register: config_webserver
@@ -93,12 +93,12 @@
     regexp: '(^0.*)'
     replace: '#\1'
 
-- name: Stat /etc/php/7.0/fpm/pool.d/www.conf
-  stat: path=/etc/php/7.0/fpm/pool.d/www.conf
+- name: Stat /etc/php/7.3/fpm/pool.d/www.conf
+  stat: path=/etc/php/7.3/fpm/pool.d/www.conf
   register: www_conf_stat
 
 - name: Move www.conf to www.conf.dist
-  command: mv /etc/php/7.0/fpm/pool.d/www.conf /etc/php/7.0/fpm/pool.d/www.conf.dist
+  command: mv /etc/php/7.3/fpm/pool.d/www.conf /etc/php/7.3/fpm/pool.d/www.conf.dist
   when: www_conf_stat.stat.exists
 
 - name: Enable site for apache2
@@ -121,7 +121,7 @@
   with_items:
     - fail2ban
     - ssh
-    - php7.0-fpm
+    - php7.3-fpm
     - mariadb
   when: config_webserver.changed
 

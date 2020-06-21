@@ -25,9 +25,9 @@ copy webserver /etc/apache2/ports.conf ports.conf
 copy webserver /etc/apache2/sites-available/000-default.conf 000-default.conf
 copy webserver /etc/apache2/sites-available/jibux.info.conf jibux.info.conf
 copy webserver /etc/apache2/conf-available/security.conf security.conf
-copy webserver /etc/php/7.0/fpm/pool.d/jb_dedi_web.conf jb_dedi_web.conf
-copy webserver /etc/php/7.0/fpm/php-fpm.conf php-fpm.conf
-copy webserver /etc/php/7.0/fpm/php.ini php.ini
+copy webserver /etc/php/7.3/fpm/pool.d/jb_dedi_web.conf jb_dedi_web.conf
+copy webserver /etc/php/7.3/fpm/php-fpm.conf php-fpm.conf
+copy webserver /etc/php/7.3/fpm/php.ini php.ini
 copy webserver /etc/default/sslh sslh
 copy webserver /etc/mysql/my.cnf my.cnf
 copy webserver /etc/iptables/rules.v4 rules.v4
