@@ -25,3 +25,6 @@
 # m h  dom mon dow   command
 0 2 * * * /home/data/scripts/ssl/renew_lets_encrypt.sh 2>&1 >>/var/log/renew_lets_encrypt.log
 0 2 * * 1 /home/data/scripts/backup/backup.sh 2>>/var/log/backup/backup_error.log >>/var/log/backup/backup.log
+
+@reboot /home/data/scripts/reboot.sh
+
