@@ -32,7 +32,7 @@ alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
 myorigin = /etc/mailname
 mydestination = $myhostname, localhost
-relayhost = 
+relayhost = smtp.orange.fr:465
 mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
 mailbox_command = 
 mailbox_size_limit = 0
@@ -47,11 +47,21 @@ smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, rej
 smtpd_tls_auth_only = yes
 smtp_use_tls = yes
 smtp_tls_note_starttls_offer = yes
+smtpd_sasl_path = smtpd
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+smtp_sasl_type = cyrus
+smtp_sasl_auth_enable = yes
+smtp_use_tls = yes
+smtp_sasl_security_options = noanonymous
+smtp_tls_wrappermode = yes
+smtp_tls_security_level = encrypt
 smtpd_tls_CAfile = /etc/postfix/ssl/cacert.pem
 smtpd_tls_loglevel = 1
 smtpd_tls_received_header = yes
 smtpd_tls_session_cache_timeout = 3600s
 tls_random_source = dev:/dev/urandom
+
+#smtp_cname_overrides_servername = no
 
 recipient_canonical_maps = hash:/etc/postfix/canonical.recipient
 

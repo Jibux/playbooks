@@ -9,9 +9,12 @@ iface lo inet loopback
 
 # The primary network interface
 allow-hotplug eth0
-iface eth0 inet dhcp
+iface eth0 inet static
 	# For sslh transparent proxying
 	# Configure routing for those marked packets
+	address 192.168.0.200
+	netmask 255.255.255.0
+	gateway 192.168.0.1
 	post-up /sbin/ip rule add fwmark 0x1 lookup 100
 	post-up /sbin/ip route add local 0.0.0.0/0 dev lo table 100
 
