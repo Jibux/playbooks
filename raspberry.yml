@@ -1,0 +1,5 @@
+---
+- name: Raspberry setup
+  hosts: raspberry
+  roles:
+    - raspberry

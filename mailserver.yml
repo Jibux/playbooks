@@ -1,0 +1,5 @@
+---
+- name: Mail server setup
+  hosts: mail
+  roles:
+    - mailserver

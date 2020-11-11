@@ -1,3 +1,4 @@
+---
 - name: Add group to user www-data
   user: name=www-data groups='jb_dedi_web'
 
@@ -51,13 +52,13 @@
 - sysctl:
     name: net.ipv4.ip_forward
     value: "1"
-    sysctl_set: yes
+    sysctl_set: true
     state: present
-    reload: yes
+    reload: true
 
 - name: Setup configuration files
   copy: owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} src={{ item.src }} dest={{ item.dest }}
-  with_items: 
+  with_items:
     - { src: 'apache2.conf', dest: '/etc/apache2/apache2.conf', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'ports.conf', dest: '/etc/apache2/ports.conf', owner: 'root', group: 'root', mode: '0644' }
     - { src: '000-default.conf', dest: '/etc/apache2/sites-available/000-default.conf', owner: 'root', group: 'root', mode: '0644' }
@@ -82,7 +83,7 @@
 
 - name: Setup logrotate files
   copy: owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} src={{ item.src }} dest={{ item.dest }}
-  with_items: 
+  with_items:
     - { src: 'apache2-private', dest: '/etc/logrotate.d/apache2-private', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'renew_lets_encrypt', dest: '/etc/logrotate.d/renew_lets_encrypt', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'openvpn', dest: '/etc/logrotate.d/openvpn', owner: 'root', group: 'root', mode: '0644' }
@@ -140,5 +141,3 @@
     - apache2
     - sslh
   when: config_webserver.changed
-
-

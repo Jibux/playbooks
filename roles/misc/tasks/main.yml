@@ -1,3 +1,4 @@
+---
 - name: Create directories
   file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} state=directory
   with_items:
@@ -20,7 +21,7 @@
 
 - name: Install tools
   apt:
-    name: "{{ ['vim', 'autofs', 'mlocate', 'tcpdump', 'apt-file', 'unattended-upgrades', 'sysstat', 'git', 'lvm2', 'smartmontools', 'hdparm'] }}"
+    name: "{{ ['vim', 'autofs', 'mlocate', 'tcpdump', 'apt-file', 'unattended-upgrades', 'sysstat', 'git', 'lvm2', 'smartmontools', 'hdparm', 'wakeonlan'] }}"
     state: present
   register: tools_installed
 
@@ -40,12 +41,12 @@
 - name: Create directories
   file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} state=directory
   with_items:
-#    - { path: '/mnt/backup', owner: 'root', group: 'root', mode: '0750' }
+    # - { path: '/mnt/backup', owner: 'root', group: 'root', mode: '0750' }
     - { path: '/var/log/backup', owner: 'root', group: 'root', mode: '0755' }
 
 - name: Setup misc configuration files
   copy: owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} src={{ item.src }} dest={{ item.dest }}
-  with_items: 
+  with_items:
     - { src: 'hosts', dest: '/etc/hosts', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'vimrc', dest: '/etc/vim/vimrc', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'root_bashrc', dest: '/root/.bashrc', owner: 'root', group: 'root', mode: '0644' }
@@ -54,11 +55,11 @@
     - { src: 'hdparm.conf', dest: '/etc/hdparm.conf', owner: 'root', group: 'root', mode: '0644' }
   register: config_misc
 
-- name: Disable and stop services
-  systemd: state=stopped enabled=no name={{ item }}
-  with_items:
-    - smartmontools
-    - smartd
+  # - name: Disable and stop services
+  #   systemd: state=stopped enabled=no name={{ item }}
+  #   with_items:
+  #     - smartmontools
+  #     - smartd
 
 - name: Restart misc services
   systemd: state=restarted enabled=yes name={{ item }}
@@ -68,7 +69,7 @@
 
 - name: Setup configuration file for autofs
   copy: owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} src={{ item.src }} dest={{ item.dest }}
-  with_items: 
+  with_items:
     - { src: 'auto.mnt', dest: '/etc/auto.mnt', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'auto.master', dest: '/etc/auto.master', owner: 'root', group: 'root', mode: '0644' }
   register: autofs_conf
@@ -79,11 +80,9 @@
 
 - name: Setup cron
   copy: owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} src={{ item.src }} dest={{ item.dest }}
-  with_items: 
+  with_items:
     - { src: 'cron_root', dest: '/var/spool/cron/crontabs/root', owner: 'root', group: 'crontab', mode: '600' }
 
 - name: Untar home from backup
   shell: cd / && tar -xzf /mnt/backup/last_backup.tgz home/
   when: first_install is defined and first_install == "yes"
-
-

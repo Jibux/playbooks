@@ -42,6 +42,12 @@
 
 ## db-[99:101]-node.example.com
 
-[server]
+[raspberry]
+jibux-server
+[misc]
+jibux-server
+[web]
+jibux-server
+[mail]
 jibux-server
 

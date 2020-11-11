@@ -1,0 +1,5 @@
+---
+- name: Web server setup
+  hosts: web
+  roles:
+    - webserver

@@ -1,3 +1,4 @@
+---
 - name: Install postfix
   apt:
     name: "{{ ['postfix', 'postfix-mysql', 'postfix-pcre', 'mailutils'] }}"
@@ -5,7 +6,7 @@
 
 - name: Setup configuration file for postfix
   copy: owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} src={{ item.src }} dest={{ item.dest }}
-  with_items: 
+  with_items:
     - { src: 'master.cf', dest: '/etc/postfix/', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'main.cf', dest: '/etc/postfix/', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'canonical.recipient', dest: '/etc/postfix/', owner: 'root', group: 'root', mode: '0644' }
@@ -35,5 +36,3 @@
 - name: Restart postfix
   systemd: state=restarted enabled=yes name=postfix
   when: postfix_conf.changed
-
-

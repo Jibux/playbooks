@@ -1,0 +1,7 @@
+---
+# Playbook to setup my home server
+
+- import_playbook: raspberry.yml
+- import_playbook: misc.yml
+- import_playbook: webserver.yml
+- import_playbook: mailserver.yml
