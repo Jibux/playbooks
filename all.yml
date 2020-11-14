@@ -5,3 +5,4 @@
 - import_playbook: misc.yml
 - import_playbook: webserver.yml
 - import_playbook: mailserver.yml
+- import_playbook: backup.yml

@@ -1,0 +1,5 @@
+---
+- name: Backup setup
+  hosts: backup
+  roles:
+    - backup

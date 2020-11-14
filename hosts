@@ -50,4 +50,6 @@ jibux-server
 jibux-server
 [mail]
 jibux-server
+[backup]
+jibux-server
 

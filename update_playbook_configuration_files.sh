@@ -4,7 +4,8 @@
 COPY_CMD="rsync -a"
 HOST="jibux-server"
 
-copy() {
+copy()
+{
 	$COPY_CMD "root@$HOST:$2" "roles/$1/files/$3"
 }
 
