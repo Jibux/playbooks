@@ -77,9 +77,14 @@
     - { src: 'interfaces', dest: '/etc/network/interfaces', owner: 'root', group: 'root', mode: '0644' }
   register: config_webserver
 
-- name: Untar debian.cnf files from backup
-  shell: cd / && tar --occurrence -xzf /mnt/backup/last_backup.tgz etc/mysql/debian.cnf
-  when: first_install is defined and first_install == "yes"
+- name: Sync files from backup
+  shell: rsync -aH --numeric-ids {{ '--dry-run' if ansible_check_mode else '' }} "/mnt/backup/rsnapshot/weekly.0/{{ ansible_hostname }}{{ item.src }}" "{{ item.dest }}"
+  loop:
+    - { src: /etc/mysql/debian.cnf, dest: /etc/mysql/debian.cnf}
+    - { src: /etc/letsencrypt/, dest: /etc/letsencrypt/}
+  when: first_install|d() == "yes"
+  check_mode: false
+  tags: sync_files
 
 - name: Setup logrotate files
   copy: owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} src={{ item.src }} dest={{ item.dest }}

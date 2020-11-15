@@ -24,10 +24,13 @@
 - name: Stat /etc/postfix/ssl/smtpd.key
   stat: path=/etc/postfix/ssl/smtpd.key
   register: postfix_ssl_certificate
+  tags: sync_files
 
-- name: Untar /etc/postfix/ssl files from backup
-  shell: cd / && tar --occurrence -xzf /mnt/backup/last_backup.tgz etc/postfix/ssl
+- name: Sync /etc/postfix/ssl files from backup
+  shell: rsync -aH --numeric-ids {{ '--dry-run' if ansible_check_mode else '' }} "/mnt/backup/rsnapshot/weekly.0/{{ ansible_hostname }}/etc/postfix/ssl/" "/etc/postfix/ssl/"
   when: postfix_ssl_certificate.stat.isreg is not defined
+  check_mode: false
+  tags: sync_files
 
 - name: Reload postfix config
   shell: postmap /etc/postfix/canonical.recipient && newaliases

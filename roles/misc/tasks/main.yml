@@ -83,6 +83,8 @@
   with_items:
     - { src: 'cron_root', dest: '/var/spool/cron/crontabs/root', owner: 'root', group: 'crontab', mode: '600' }
 
-- name: Untar home from backup
-  shell: cd / && tar -xzf /mnt/backup/last_backup.tgz home/
-  when: first_install is defined and first_install == "yes"
+- name: Sync home from backup
+  shell: rsync -aH --numeric-ids {{ '--dry-run' if ansible_check_mode else '' }} "/mnt/backup/rsnapshot/weekly.0/{{ ansible_hostname }}/home/" "/home/"
+  when: first_install|d() == "yes"
+  check_mode: false
+  tags: sync_files
