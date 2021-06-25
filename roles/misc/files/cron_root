@@ -23,7 +23,7 @@
 # For more information see the manual pages of crontab(5) and cron(8)
 # 
 # m h  dom mon dow   command
-30 0 * * * /home/data/scripts/ssl/renew_lets_encrypt.sh 2>&1 >>/var/log/renew_lets_encrypt.log
+30 23 * * * /home/data/scripts/ssl/renew_lets_encrypt.sh 2>&1 >>/var/log/renew_lets_encrypt.log
 0 1 * * 1 /home/data/scripts/backup/backup.sh 2>>/var/log/backup/backup_error.log >>/var/log/backup/backup.log
 
 @reboot /home/data/scripts/reboot.sh
