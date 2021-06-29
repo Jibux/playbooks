@@ -7,5 +7,4 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 
 
-192.168.0.33	agathe
-192.168.0.100	nas
+192.168.1.100	nas
