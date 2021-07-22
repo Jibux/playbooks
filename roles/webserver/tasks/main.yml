@@ -98,6 +98,7 @@
     path: /etc/cron.d/certbot
     regexp: '(^0.*)'
     replace: '#\1'
+  ignore_errors: true
 
 - name: Stat /etc/php/7.3/fpm/pool.d/www.conf
   stat: path=/etc/php/7.3/fpm/pool.d/www.conf
