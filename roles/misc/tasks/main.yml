@@ -44,7 +44,7 @@
     # - { path: '/mnt/backup', owner: 'root', group: 'root', mode: '0750' }
     - { path: '/var/log/backup', owner: 'root', group: 'root', mode: '0755' }
 
-- name: Setup misc configuration files
+- name: Setup misc configuration files and scripts
   copy: owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} src={{ item.src }} dest={{ item.dest }}
   with_items:
     - { src: 'hosts', dest: '/etc/hosts', owner: 'root', group: 'root', mode: '0644' }
@@ -53,6 +53,7 @@
     - { src: '.selected_editor', dest: '/root/.selected_editor', owner: 'root', group: 'root', mode: '0644' }
     - { src: '50unattended-upgrades', dest: '/etc/apt/apt.conf.d/50unattended-upgrades', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'hdparm.conf', dest: '/etc/hdparm.conf', owner: 'root', group: 'root', mode: '0644' }
+    - { src: 'reboot.sh', dest: '/root/scripts/reboot.sh', owner: 'root', group: 'root', mode: '0750' }
   register: config_misc
 
   # - name: Disable and stop services

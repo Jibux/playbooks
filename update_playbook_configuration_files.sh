@@ -20,6 +20,7 @@ copy misc /etc/hdparm.conf hdparm.conf
 copy misc /etc/auto.mnt auto.mnt
 copy misc /etc/auto.master auto.master
 copy misc /var/spool/cron/crontabs/root cron_root
+copy misc /root/scripts/reboot.sh reboot.sh
 
 copy webserver /etc/apache2/apache2.conf apache2.conf
 copy webserver /etc/apache2/ports.conf ports.conf
