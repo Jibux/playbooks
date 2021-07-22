@@ -43,13 +43,13 @@
 ## db-[99:101]-node.example.com
 
 [raspberry]
-jibux-server
+jibux-server.local
 [misc]
-jibux-server
+jibux-server.local
 [web]
-jibux-server
+jibux-server.local
 [mail]
-jibux-server
+jibux-server.local
 [backup]
-jibux-server
+jibux-server.local
 
