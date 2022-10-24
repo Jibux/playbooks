@@ -10,6 +10,7 @@
     - { src: 'master.cf', dest: '/etc/postfix/', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'main.cf', dest: '/etc/postfix/', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'canonical.recipient', dest: '/etc/postfix/', owner: 'root', group: 'root', mode: '0644' }
+    - { src: 'generic', dest: '/etc/postfix/', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'smtp_reply_filter', dest: '/etc/postfix/', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'mysql-virtual_domains.cf', dest: '/etc/postfix/', owner: 'root', group: 'root', mode: '0644' }
     - { src: 'mysql-virtual_email2email.cf', dest: '/etc/postfix/', owner: 'root', group: 'root', mode: '0644' }
@@ -33,7 +34,7 @@
   tags: sync_files
 
 - name: Reload postfix config
-  shell: postmap /etc/postfix/canonical.recipient && newaliases
+  shell: postmap /etc/postfix/canonical.recipient && postmap /etc/postfix/generic && newaliases
   when: postfix_conf.changed
 
 - name: Restart postfix

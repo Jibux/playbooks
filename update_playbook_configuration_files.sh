@@ -2,7 +2,7 @@
 
 
 COPY_CMD="rsync -a"
-HOST="jibux-server"
+HOST="jibux-server.local"
 
 copy()
 {
@@ -44,6 +44,7 @@ copy webserver /etc/logrotate.d/openvpn openvpn
 
 copy mailserver /etc/postfix/master.cf master.cf
 copy mailserver /etc/postfix/main.cf main.cf
+copy mailserver /etc/postfix/generic generic
 copy mailserver /etc/postfix/canonical.recipient canonical.recipient
 copy mailserver /etc/postfix/smtp_reply_filter smtp_reply_filter
 copy mailserver /etc/postfix/mysql-virtual_domains.cf mysql-virtual_domains.cf

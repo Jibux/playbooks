@@ -61,6 +61,8 @@ smtpd_tls_received_header = yes
 smtpd_tls_session_cache_timeout = 3600s
 tls_random_source = dev:/dev/urandom
 
+smtp_generic_maps = hash:/etc/postfix/generic
+
 #smtp_cname_overrides_servername = no
 
 recipient_canonical_maps = hash:/etc/postfix/canonical.recipient
