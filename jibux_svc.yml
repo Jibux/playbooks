@@ -1,0 +1,5 @@
+---
+- hosts: jibux_svc
+  become: true
+  roles:
+    - jibux_svc

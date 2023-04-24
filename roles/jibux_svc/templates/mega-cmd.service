@@ -1,0 +1,10 @@
+[Unit]
+Description=Mega-CMD systemd service
+After=network.target
+[Service]
+Environment="HOME=/root"
+Restart=no
+ExecStart=/usr/bin/mega-cmd-server
+
+[Install]
+WantedBy=multi-user.target

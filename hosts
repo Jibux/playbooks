@@ -52,4 +52,7 @@ jibux-server.local
 jibux-server.local
 [backup]
 jibux-server.local
+[jibux_svc]
+jibux-server.local
+jibux-taf
 

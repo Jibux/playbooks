@@ -1,0 +1,69 @@
+---
+version: "{{ compose_version }}"
+services:
+  radicale:
+    image: "tomsquest/docker-radicale:{{ radicale_version }}"
+    container_name: radicale
+    ports:
+      - 127.0.0.1:{{ radicale_port }}:5232
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETUID
+      - SETGID
+      - CHOWN
+      - KILL
+    healthcheck:
+      test: curl -f http://127.0.0.1:5232 || exit 1
+      interval: 30s
+      retries: 3
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.radicale.rule=Host(`{{ dav_sync_host }}`)"
+      - "traefik.http.routers.radicale.entryPoints=websecure"
+      - "traefik.http.services.radicale.loadbalancer.server.port=5232"
+    environment:
+      - "TAKE_FILE_OWNERSHIP=false"
+      - "UID=0"
+      - "GUID=0"
+    volumes:
+      - ./data/radicale/data:/data
+      - ./data/radicale/config/users:/config/users:ro
+      - ./radicale_config:/config/config:ro
+
+  traefik:
+    image: "traefik:{{ traefik_version }}"
+    secrets:
+      - "ovh_endpoint"
+      - "ovh_application_key"
+      - "ovh_application_secret"
+      - "ovh_consumer_key"
+    environment:
+      - "OVH_ENDPOINT_FILE=/run/secrets/ovh_endpoint"
+      - "OVH_APPLICATION_KEY_FILE=/run/secrets/ovh_application_key"
+      - "OVH_APPLICATION_SECRET_FILE=/run/secrets/ovh_application_secret"
+      - "OVH_CONSUMER_KEY_FILE=/run/secrets/ovh_consumer_key"
+    restart: always
+    ports:
+      - 443:443
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik.yaml:/etc/traefik/traefik.yaml:ro"
+      - "./data/traefik/conf:/etc/traefik/conf:ro"
+      - "{{ traefik_log_dir }}:/logs"
+      - "./data/traefik/letsencrypt:/letsencrypt"
+
+secrets:
+  # secret name also used to name the file exposed within the container
+  ovh_endpoint:
+    file: "./data/secrets/ovh_endpoint"
+  ovh_application_key:
+    file: "./data/secrets/ovh_application_key"
+  ovh_application_secret:
+    file: "./data/secrets/ovh_application_secret"
+  ovh_consumer_key:
+    file: "./data/secrets/ovh_consumer_key"

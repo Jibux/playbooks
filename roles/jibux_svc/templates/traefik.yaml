@@ -1,0 +1,50 @@
+---
+api:
+  dashboard: true
+  insecure: true
+
+log:
+  level: DEBUG
+  filePath: /logs/general.log
+
+accessLog:
+  filePath: /logs/access.log
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: "websecure"
+          scheme: "https"
+
+  websecure:
+    address: ":443"
+    forwardedHeaders:
+      trustedIPs:
+        - "127.0.0.1/32"  # localhost
+        - "10.0.0.0/8"  # swarm mode ip range
+        - "192.168.0.0/16"  # stand-alone after 172.16.0.0/12 is exhausted
+        - "172.16.0.0/12"  # stand-alone
+    http:
+      tls:
+        certResolver: letsencrypt
+
+certificatesResolvers:
+  # caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+  letsencrypt:
+    acme:
+      email: "jibux@jibux.info"
+      storage: "/letsencrypt/acme.json"
+      dnsChallenge:
+        provider: ovh
+        delayBeforeCheck: 10
+
+providers:
+  docker:
+    watch: true
+    network: "web"
+    exposedByDefault: false
+  file:
+    directory: /etc/traefik/conf
