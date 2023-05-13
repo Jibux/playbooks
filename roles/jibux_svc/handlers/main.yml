@@ -1,0 +1,9 @@
+---
+- name: Systemd daemon reload
+  systemd:
+    daemon_reload: true
+
+- name: jibux_svc service state
+  systemd:
+    name: jibux_svc
+    state: "{{ 'restarted' if svc_enabled | bool else 'stopped' }}"

@@ -1,0 +1,7 @@
+---
+ansible_connection: local
+svc_enabled: true
+ovh_dyndns_interface: wlo1
+ovh_dyndns_router_whitelist:
+  - f4:42:8f:11:55:a2 # Samsung Galaxy A3 connection sharing
+  - f4:ca:e5:42:6d:e6 # Home

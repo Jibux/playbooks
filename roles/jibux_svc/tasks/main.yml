@@ -1,0 +1,31 @@
+---
+- include_tasks:
+    file: softs.yml
+    apply:
+      tags:
+        - softs
+  tags:
+    - softs
+
+- include_tasks:
+    file: compose.yml
+    apply:
+      tags:
+        - compose
+  tags:
+    - compose
+
+- include_tasks:
+    file: mega.yml
+    apply:
+      tags:
+        - mega
+  tags:
+    - mega
+
+- name: jibux_svc service enabled/disabled
+  systemd:
+    name: jibux_svc
+    enabled: "{{ svc_enabled | bool }}"
+  tags:
+    - compose

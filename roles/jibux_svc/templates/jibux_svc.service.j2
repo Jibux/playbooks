@@ -1,0 +1,20 @@
+[Unit]
+Description="Jibux services"
+After=network-online.target auditd.service
+Wants=network-online.target
+StartLimitIntervalSec=400
+StartLimitBurst=1
+[Service]
+Restart=on-failure
+RestartSec=300
+StandardOutput=null
+WorkingDirectory={{ svc_dir }}
+
+ExecStart=docker compose up --remove-orphans
+ExecStop=docker compose down
+
+ExecStartPre={{ svc_scripts_dir }}/ovh_dyndns_update.sh --hostname={{ svc_host }} --cred-file={{ ovh_dyndns_cred_path }} --interface={{ ovh_dyndns_interface }} --router-whitelist={{ ovh_dyndns_router_whitelist | join(',') }}
+ExecStartPre=-systemctl start mega-cmd.service
+
+[Install]
+WantedBy=multi-user.target
