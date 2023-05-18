@@ -28,24 +28,12 @@ This directory is synchronized with MEGA cloud using [MEGAcmd client](https://gi
 
 #### `secrets`
 
-Here should be the credentials to access OVH API for DNS01 challenge:
+Here should be the credentials to access OVH API for DNS01 challenge and for `ovh_dyndns_update.sh` script:
 
 * ovh_endpoint
 * ovh_application_key
 * ovh_application_secret
 * ovh_consumer_key
-
-Rights needed:
-
-```
-POST /domain/zone/<domain>/record
-POST /domain/zone/<domain>/refresh
-DELETE /domain/zone/<domain>/record/*
-```
-
-Also the credentials used by `ovh_dyndns_update.sh` script:
-
-* ovh_dyndns 
 
 #### `radicale`
 

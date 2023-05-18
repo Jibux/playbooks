@@ -23,6 +23,14 @@
   tags:
     - mega
 
+- include_tasks:
+    file: ovh_cred.yml
+    apply:
+      tags:
+        - ovh_cred
+  tags:
+    - ovh_cred
+
 - name: jibux_svc service enabled/disabled
   systemd:
     name: jibux_svc
