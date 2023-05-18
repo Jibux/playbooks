@@ -11,10 +11,11 @@
     filename: megasync.list
     state: present
 
-- name: Install docker
+- name: Install softwares
   apt:
     update-cache: true
     name:
       - docker
       - megacmd
+      - jq
     state: latest

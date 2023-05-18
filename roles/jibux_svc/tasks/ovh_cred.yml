@@ -1,0 +1,72 @@
+---
+- name: Create secrets dir
+  file:
+    path: "{{ ovh_secrets_path }}"
+    state: directory
+    mode: "0600"
+    owner: root
+    group: root
+
+- name: List files into secrets dir
+  find:
+    paths: "{{ ovh_secrets_path }}"
+  register: find_out
+
+- set_fact:
+    secret_files: "{{ find_out.files | d([]) | map(attribute='path') | map('basename') }}"
+
+- when: "['ovh_application_key', 'ovh_application_secret'] | difference(secret_files) | length > 0"
+  block:
+    - pause:
+        prompt: Please visit {{ ovh_create_app_url }} to create application
+    - pause:
+        prompt: "Application key"
+      register: app_key
+    - pause:
+        prompt: "Application secret"
+      register: app_sec
+
+    - name: Copy application key
+      copy:
+        content: "{{ app_key.user_input }}"
+        dest: "{{ ovh_secrets_path }}/ovh_application_key"
+
+    - name: Copy application secret
+      copy:
+        content: "{{ app_sec.user_input }}"
+        dest: "{{ ovh_secrets_path }}/ovh_application_secret"
+
+
+- when: "'ovh_consumer_key' not in secret_files"
+  block:
+    - name: Get application key
+      command: "cat {{ ovh_secrets_path }}/ovh_application_key"
+      register: cmd_out
+      check_mode: false
+      changed_when: false
+
+    - set_fact:
+        ovh_application_key: "{{ cmd_out.stdout }}"
+        body:
+          accessRules: "{{ ovh_api_rights }}"
+
+    - name: Call OVH api to create credential
+      uri:
+        url: "{{ ovh_api_url }}/auth/credential"
+        method: POST
+        body_format: json
+        headers:
+          Content-Type: application/json
+          X-Ovh-Application: "{{ ovh_application_key }}"
+        body: "{{ body }}"
+      register: uri_call
+
+    - pause:
+        prompt: |
+          Please visit {{ uri_call.json.validationUrl }} to validate credential
+          Press ENTER when done
+
+    - name: Copy consumer key
+      copy:
+        content: "{{ uri_call.json.consumerKey }}"
+        dest: "{{ ovh_secrets_path }}/ovh_consumer_key"

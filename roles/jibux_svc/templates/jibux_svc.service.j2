@@ -13,7 +13,7 @@ WorkingDirectory={{ svc_dir }}
 ExecStart=docker compose up --remove-orphans
 ExecStop=docker compose down
 
-ExecStartPre={{ svc_scripts_dir }}/ovh_dyndns_update.sh --hostname={{ svc_host }} --cred-file={{ ovh_dyndns_cred_path }} --interface={{ ovh_dyndns_interface }} --router-whitelist={{ ovh_dyndns_router_whitelist | join(',') }}
+ExecStartPre={{ svc_scripts_dir }}/ovh_dyndns_update.sh --hostname={{ svc_host }} --cred-dir={{ ovh_secrets_path }} --interface={{ ovh_dyndns_interface }} --router-whitelist={{ ovh_dyndns_router_whitelist | join(',') }} --log-dir="{{ scripts_log_dir }}"
 ExecStartPre=-systemctl start mega-cmd.service
 
 [Install]

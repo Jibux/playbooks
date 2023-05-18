@@ -1,11 +1,14 @@
 ---
-svc_host: svc.jibux.info
-dav_sync_host: dav.jibux.info
+ovh_create_app_url: https://www.ovh.com/auth/api/createApp
+ovh_api_url: https://api.ovh.com/1.0
+svc_domain: jibux.info
+svc_host: "svc.{{ svc_domain }}"
+dav_sync_host: "dav.{{ svc_domain }}"
 svc_dir: /opt/jibux_svc
 svc_data_dir: "{{ svc_dir }}/data"
 svc_scripts_dir: "{{ svc_dir }}/scripts"
 mega_data_path: /dev_and_scripts/jibux_svc_data
-ovh_dyndns_cred_path: "{{ svc_data_dir }}/secrets/ovh_dyndns"
+ovh_secrets_path: "{{ svc_data_dir }}/secrets"
 log_dir: /var/log/jibux_svc
 traefik_log_dir: "{{ log_dir }}/traefik"
 scripts_log_dir: "{{ log_dir }}/scripts"
@@ -14,3 +17,10 @@ compose_version: 3.7
 radicale_version: 3.1.8.1
 traefik_version: 2.9
 radicale_port: 5231
+
+ovh_api_rights:
+  - { method: GET, path: "/domain/zone/{{ svc_domain }}/record*" }
+  - { method: PUT, path: "/domain/zone/{{ svc_domain }}/record/*" }
+  - { method: DELETE, path: "/domain/zone/{{ svc_domain }}/record/*" }
+  - { method: POST, path: "/domain/zone/{{ svc_domain }}/record" }
+  - { method: POST, path: "/domain/zone/{{ svc_domain }}/refresh" }

@@ -6,16 +6,15 @@ set -o errexit -o errtrace -o pipefail -o nounset
 
 usage()
 {
-	echo "Update OVH dyndns entry for specific hostname"
-	echo "Usage: $0 --hostname=<hostname> --cred-file=<OVH dyndns credentials> [other options]"
+	echo "Update OVH dns entry for specific hostname"
+	echo "Usage: $0 --hostname=<hostname> --cred-dir=<directory where are located OVH API credential files> [other options]"
 	echo "By default, will use src IP of default route"
-	echo "--cred-file should be formated like this:"
-	echo -e "USER_NAME=<user name>\nPASSWORD=<password>"
 	echo "Other options:"
 	echo "--ip=w.x.y.z - use specific IP"
 	echo "--interface=iface - use specific interface"
 	echo "--router-whitelist=a:b:c:d,e:f:g:h - update dns only if router mac address is matching one of the list"
 	echo "--public - use router public IP instead of local private IP"
+	echo "--log-dir - output logs to this directory"
 	echo "--force - force DNS update even if the hostname already resolves the good IP"
 }
 
@@ -32,17 +31,17 @@ date_fmt()
 
 err()
 {
-	echo "$(date_fmt) - ERROR - ${1:-}" >&2
+	echo -e "$(date_fmt) - ERROR - ${1:-}" >&2
 }
 
 warn()
 {
-	echo "$(date_fmt) - WARN - ${1:-}" >&2
+	echo -e "$(date_fmt) - WARN - ${1:-}" >&2
 }
 
 log()
 {
-	echo "$(date_fmt) - ${1:-}"
+	echo -e "$(date_fmt) - ${1:-}"
 }
 
 fail()
@@ -108,35 +107,102 @@ public_ip_setup()
 	IP="$(dig @resolver4.opendns.com myip.opendns.com +short)"
 }
 
-exec_cmd()
+ovh_api_sig()
 {
-	local cmd=$1
-	local retries=$2
-	local result=""
-	local ret_code=1
-	local i=0
+	local sig_data
+	local method=$1
+	local url=$2
+	local body=$3
+	local timestamp=$4
 
-	while [[ "$ret_code" != "0" && "$i" -lt "$retries" ]]; do
-		i=$((i+1))
-		ret_code=0
-		printf "." >> "$LOG_FILE"
-		result=$(eval "$cmd") || ret_code=$? && sleep 1
-	done
-	echo >> "$LOG_FILE"
-	echo "$result"
-	return $ret_code
+	sig_data="$OVH_APPLICATION_SECRET+$OVH_CONSUMER_KEY+$method+$url+$body+$timestamp"
+	echo "\$1\$$(echo -n "${sig_data}" | sha1sum - | cut -d' ' -f1)"
+}
+
+
+ovh_timestamp()
+{
+	curl --connect-timeout "$CURL_TIMEOUT" -s "$OVH_API_URL/auth/time"
+}
+
+ovh_api_call()
+{
+	local method=$1
+	local path=$2
+	local body=${3:-}
+	local timestamp
+	local url="$OVH_API_URL/$path"
+	timestamp=$(ovh_timestamp)
+	sig=$(ovh_api_sig "$method" "$url" "$body" "$timestamp")
+	curl -sS --fail-with-body -X "$method" \
+--connect-timeout "$CURL_TIMEOUT" \
+--header 'Content-Type:application/json;charset=utf-8' \
+--header "X-Ovh-Application:$OVH_APPLICATION_KEY" \
+--header "X-Ovh-Timestamp:$timestamp" \
+--header "X-Ovh-Signature:$sig" \
+--header "X-Ovh-Consumer:$OVH_CONSUMER_KEY" \
+--data "$body" \
+"$url"
 }
 
 update_dns()
 {
-	local res_log=""
-	log "Update DNS"
-	log "Exec curl" >> "$CURL_LOG"
-	RESULT=$(exec_cmd "curl --connect-timeout $CURL_TIMEOUT -u '$USER_NAME:$PASSWORD' 'https://www.ovh.com/nic/update?system=dyndns&hostname=$HOST_NAME&myip=$IP' 2>>'$CURL_LOG'" 3) || fail "DNS update failed - exit code: $?"
-	res_log="DNS update result: $RESULT"
-	[[ "$RESULT" =~ ^(nochg|good)  ]] || fail "$res_log"
-	log "$res_log"
+	local res=""
+	local data
+	local ip_v_suffix="(v$1)"
+	local type=$2
+	local record_file="$ZONE_RECORDS_DIR/${type}_$HOST_NAME"
+	log "Update DNS $ip_v_suffix"
+
+	if [ -f "$record_file" ]; then
+		# Record exist: update it
+		log "Update '$SUB_DOMAIN' record for '$BASE_DOMAIN' $ip_v_suffix"
+		data='{"subDomain":"'"$SUB_DOMAIN"'","target":"'"$IP"'"}'
+		ovh_api_call "PUT" "domain/zone/$BASE_DOMAIN/record/$(cat "$record_file")" "$data" || fail "Update zone failed"
+	else
+		# Record does not exist: create it
+		data='{"fieldType":"'"$type"'","subDomain":"'"$SUB_DOMAIN"'","target":"'"$IP"'","ttl":'"$TTL"'}'
+		log "Create '$SUB_DOMAIN' record for '$BASE_DOMAIN' $ip_v_suffix"
+		res=$(ovh_api_call "POST" "domain/zone/$BASE_DOMAIN/record" "$data" ) || fail "$res"
+		echo "$res" | jq -r .id > "$record_file"
+		log "Refresh zone"
+		ovh_api_call "POST" "domain/zone/$BASE_DOMAIN/refresh" || fail "Fail to refresh zone"
+	fi
+
 	return 0
+}
+
+update_dns_v4()
+{
+	update_dns "4" "A"
+}
+
+init_api_var()
+{
+	local v=$1
+	local v_name=${1^^}
+	local file="$CRED_DIR/$v"
+	if [ -f "$file" ]; then
+		eval "$v_name=$(<"$file")"
+	else
+		warn "$file does not exist!"
+		eval "$v_name="
+	fi
+}
+
+init_api_vars()
+{
+	init_api_var "ovh_consumer_key"
+	init_api_var "ovh_application_key"
+	init_api_var "ovh_application_secret"
+}
+
+get_base_domain()
+{
+	local host=$1
+	local arr
+	IFS='.' read -r -a arr <<< "$host"
+	echo "${arr[-2]}.${arr[-1]}"
 }
 
 
@@ -144,20 +210,19 @@ CURL_TIMEOUT=3
 HOST_NAME=""
 INTERFACE=""
 IP=""
-CRED_FILE=""
-USER_NAME=""
-PASSWORD=""
+CRED_DIR=""
+OVH_API_URL="{{ ovh_api_url }}"
+OVH_CONSUMER_KEY=""
+OVH_APPLICATION_KEY=""
+OVH_APPLICATION_SECRET=""
 ROUTER_WHITELIST=""
 IP_TYPE="private"
 FORCE="no"
+TTL=60
 
 trap fail ERR
 
 SCRIPT_NAME=$(basename -- "$0")
-
-LOG_FILE="{{ scripts_log_dir }}/$SCRIPT_NAME.log"
-exec &>> "$LOG_FILE"
-CURL_LOG="{{ scripts_log_dir }}/curl.log"
 
 for arg in "$@"; do
 	case $arg in
@@ -173,8 +238,14 @@ for arg in "$@"; do
 		HOST_NAME="${arg#*=}"
 		shift
 		;;
-	--cred-file=*)
-		CRED_FILE="${arg#*=}"
+	--cred-dir=*)
+		tmp_var="${arg#*=}"
+		CRED_DIR="${tmp_var%/}"
+		shift
+		;;
+	--log-dir=*)
+		LOG_FILE="${arg#*=}/$SCRIPT_NAME.log"
+		exec &>> "$LOG_FILE"
 		shift
 		;;
 	--router-whitelist=*)
@@ -196,14 +267,15 @@ for arg in "$@"; do
 done
 
 [ -z "$HOST_NAME" ] && exit_usage
-[ -z "$CRED_FILE" ] && exit_usage
-[ -f "$CRED_FILE" ] || fail "'$CRED_FILE' is not a file"
+BASE_DOMAIN=$(get_base_domain "$HOST_NAME")
+SUB_DOMAIN=${HOST_NAME//\.$BASE_DOMAIN/}
+log "Base domain: $BASE_DOMAIN"
+log "Sub domain: $SUB_DOMAIN"
 
-# shellcheck disable=SC1090
-source "$CRED_FILE" || fail "Failed to source '$CRED_FILE'"
-
-[ -z "$USER_NAME" ] && fail "You should specify USER_NAME into '$CRED_FILE'"
-[ -z "$PASSWORD" ] && fail "You should specify PASSWORD into '$CRED_FILE'"
+[ -d "$CRED_DIR" ] || fail "'$CRED_DIR' is not a directory or does not exist"
+init_api_vars
+ZONE_RECORDS_DIR="$CRED_DIR/zone_records"
+mkdir -p "$ZONE_RECORDS_DIR"
 
 if [ "$IP_TYPE" == "private" ]; then
 	private_ip_setup
@@ -217,7 +289,7 @@ log "Using IP $IP"
 
 RESOLVED_IP=$(dig "$HOST_NAME" +short || echo "")
 if [[ "$FORCE" == "yes" || "$RESOLVED_IP" != "$IP" ]]; then
-	update_dns
+	update_dns_v4
 else
 	log "'$HOST_NAME' already resolves '$IP'"
 fi
