@@ -1,5 +1,0 @@
----
-- name: Misc setup
-  hosts: misc
-  roles:
-    - misc

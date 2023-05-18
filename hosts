@@ -44,14 +44,6 @@
 
 [raspberry]
 jibux-server.local
-[misc]
-jibux-server.local
-[web]
-jibux-server.local
-[mail]
-jibux-server.local
-[backup]
-jibux-server.local
 [jibux_svc]
 jibux-server.local
 jibux-taf
