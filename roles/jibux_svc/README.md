@@ -9,9 +9,9 @@ The goal is to run services in a local network not publicly accessible. They can
 
 ### Variables
 
-* `svc_host` is the domain used to access the services. It will resolve the private IP of the host. Its IP is updated by the `ovh_dyndns_update.sh` script. This script is launched in `ExecStartPre` by `jibux_svc.service`. It will fail if the discovered router MAC address is not matching `ovh_dyndns_router_whitelist`.
+* `svc_host` is the domain used to access the services. It will resolve the private IP of the host. Its IP is updated by the `ovh_dns_update.sh` script. This script is launched in `ExecStartPre` by `jibux_svc.service`. It will fail if the discovered router MAC address is not matching `svc_router_whitelist`.
 * `dav_sync_host` is an alias to `svc_host`. It is used to access the Radicale server.
-* `ovh_dyndns_interface` is the network interface where to get the private IP from.
+* `svc_interface` is the network interface where to get the private IP from.
 * `svc_enabled` stands for `jibux_svc` service activation/deactivation at boot time.
 
 ## Structure
@@ -28,7 +28,7 @@ This directory is synchronized with MEGA cloud using [MEGAcmd client](https://gi
 
 #### `secrets`
 
-Here should be the credentials to access OVH API for DNS01 challenge and for `ovh_dyndns_update.sh` script:
+Here should be the credentials to access OVH API for DNS01 challenge and for `ovh_dns_update.sh` script:
 
 * ovh_endpoint
 * ovh_application_key
@@ -47,5 +47,5 @@ Here should be the credentials to access OVH API for DNS01 challenge and for `ov
 
 ### `scripts` directory
 
-* `ovh_dyndns_update.sh` - see help into the script
+* `ovh_dns_update.sh` - see help into the script
 
