@@ -30,7 +30,7 @@
     group: root
     mode: "0700"
   loop:
-    - ovh_dyndns_update.sh
+    - ovh_dns_update.sh
 
 - name: Docker compose files
   template:
