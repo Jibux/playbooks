@@ -5,13 +5,13 @@
 * Simple CardDav/CalDav server using [Radicale](https://radicale.org/)
 * Used with Traefik and letsencrypt OVH DNS01 challenge for certificate generation
 
-The goal is to run services in a local network not publicly accessible. They can be reached by a domain which should resolve a private IP.
+Services can run into a device not publicly accessible (private IPv4) or publicly accessible (IPv6 or public IPv4)
 
 ### Variables
 
-* `svc_host` is the domain used to access the services. It will resolve the private IP of the host. Its IP is updated by the `ovh_dns_update.sh` script. This script is launched in `ExecStartPre` by `jibux_svc.service`. It will fail if the discovered router MAC address is not matching `svc_router_whitelist`.
+* `svc_host` is the domain used to access the services. It will resolve the IP of the host. Its IP is updated by the `jibux_svc_pre_start.py` script. This script is launched in `ExecStartPre` by `jibux_svc.service`. It will fail if the discovered router MAC address is not matching `svc_router_whitelist`.
 * `dav_sync_host` is an alias to `svc_host`. It is used to access the Radicale server.
-* `svc_interface` is the network interface where to get the private IP from.
+* `svc_interface` is the network interface where to get the IPv6 or the private IPv4 from.
 * `svc_enabled` stands for `jibux_svc` service activation/deactivation at boot time.
 
 ## Structure
@@ -21,6 +21,21 @@ The goal is to run services in a local network not publicly accessible. They can
 * docker-compose.yaml
 * radicale_config
 * traefik.yaml - Traefik configuration
+* jibux_svc_config.yaml - Configuration used by `jibux_svc_pre_start.py` script
+
+#### `jibux_svc_config.yaml` configuration structure
+
+```yaml
+---
+router_whitelist:
+  - description: Mobile network sharing
+    ipv6: true  # Defaults to false
+    ipv4: false  # Defaults to true
+    mac: f4:50:8f:44:55:ab  # Router mac address
+  - description: Home
+    mac: f5:eb:73:42:d0:e4
+    ip_type: public  # Defaults to 'private' (only for ipv4)
+```
 
 ### `data` directory
 
@@ -28,7 +43,7 @@ This directory is synchronized with MEGA cloud using [MEGAcmd client](https://gi
 
 #### `secrets`
 
-Here should be the credentials to access OVH API for DNS01 challenge and for `ovh_dns_update.sh` script:
+Here should be the credentials to access OVH API for DNS01 challenge and for `jibux_svc_pre_start.py` script:
 
 * ovh_endpoint
 * ovh_application_key
@@ -47,5 +62,5 @@ Here should be the credentials to access OVH API for DNS01 challenge and for `ov
 
 ### `scripts` directory
 
-* `ovh_dns_update.sh` - see help into the script
+* `jibux_svc_pre_start.py` - see help into the script
 

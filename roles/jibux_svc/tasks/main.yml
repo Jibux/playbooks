@@ -14,6 +14,7 @@
         - compose
   tags:
     - compose
+    - compose_files
 
 - include_tasks:
     file: mega.yml

@@ -23,14 +23,14 @@
     - "{{ scripts_log_dir }}"
 
 - name: Scripts
-  template:
+  copy:
     src: "{{ item }}"
     dest: "{{ svc_scripts_dir }}/"
     owner: root
     group: root
-    mode: "0700"
+    mode: "0500"
   loop:
-    - ovh_dns_update.sh
+    - jibux_svc_pre_start.py
 
 - name: Docker compose files
   template:
@@ -41,10 +41,13 @@
     mode: "0400"
   loop:
     - docker-compose.yaml
-    - traefik.yaml
+    - jibux_svc_config.yaml
     - radicale_config
+    - traefik.yaml
   notify:
     - jibux_svc service state
+  tags:
+    - compose_files
 
 - name: Logrotates
   template:

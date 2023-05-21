@@ -1,0 +1,5 @@
+---
+{% if svc_router_whitelist|d([])|length > 0 %}
+router_whitelist:
+  {{ svc_router_whitelist|to_nice_yaml(indent=2)|indent(2) }}
+{%- endif %}
