@@ -1,0 +1,6 @@
+---
+ansible_connection: local
+svc_enabled: false
+svc_interface: enp2s0
+svc_router_whitelist:
+  - f4:ca:e5:42:6d:e6 # Home
