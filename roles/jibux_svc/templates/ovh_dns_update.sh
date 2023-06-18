@@ -165,9 +165,10 @@ update_dns()
 		log "Create '$SUB_DOMAIN' record for '$BASE_DOMAIN' $ip_v_suffix"
 		res=$(ovh_api_call "POST" "domain/zone/$BASE_DOMAIN/record" "$data" ) || fail "$res"
 		echo "$res" | jq -r .id > "$record_file"
-		log "Refresh zone"
-		ovh_api_call "POST" "domain/zone/$BASE_DOMAIN/refresh" || fail "Fail to refresh zone"
 	fi
+
+	log "Refresh zone"
+	ovh_api_call "POST" "domain/zone/$BASE_DOMAIN/refresh" || fail "Fail to refresh zone"
 
 	return 0
 }
