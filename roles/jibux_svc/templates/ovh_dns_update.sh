@@ -159,6 +159,7 @@ update_dns()
 		log "Update '$SUB_DOMAIN' record for '$BASE_DOMAIN' $ip_v_suffix"
 		data='{"subDomain":"'"$SUB_DOMAIN"'","target":"'"$IP"'"}'
 		ovh_api_call "PUT" "domain/zone/$BASE_DOMAIN/record/$(cat "$record_file")" "$data" || fail "Update zone failed"
+		echo
 	else
 		# Record does not exist: create it
 		data='{"fieldType":"'"$type"'","subDomain":"'"$SUB_DOMAIN"'","target":"'"$IP"'","ttl":'"$TTL"'}'
@@ -169,6 +170,7 @@ update_dns()
 
 	log "Refresh zone"
 	ovh_api_call "POST" "domain/zone/$BASE_DOMAIN/refresh" || fail "Fail to refresh zone"
+	echo
 
 	return 0
 }
