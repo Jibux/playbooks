@@ -25,7 +25,6 @@
 
 - name: Install softwares
   apt:
-    update-cache: true
     name:
       - docker
       - megacmd
@@ -37,7 +36,3 @@
       - docker-buildx-plugin
       - docker-compose-plugin
     state: latest
-
-
-
-
