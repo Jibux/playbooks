@@ -2,11 +2,13 @@
 Description="Jibux services"
 After=network-online.target auditd.service
 Wants=network-online.target
-StartLimitIntervalSec=400
-StartLimitBurst=1
+# Restart max 5 times in a period of 3 minutes
+StartLimitIntervalSec=180
+StartLimitBurst=5
 [Service]
 Restart=on-failure
-RestartSec=300
+# Wait 3 minutes before restart service
+RestartSec=180
 StandardOutput=null
 WorkingDirectory={{ svc_dir }}
 
