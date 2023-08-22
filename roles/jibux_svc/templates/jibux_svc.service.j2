@@ -2,9 +2,9 @@
 Description="Jibux services"
 After=network-online.target auditd.service
 Wants=network-online.target
-# Restart max 5 times in a period of 3 minutes
-StartLimitIntervalSec=180
-StartLimitBurst=5
+# Restart max 2 times in a period of 9 minutes
+StartLimitIntervalSec=540
+StartLimitBurst=2
 [Service]
 Restart=on-failure
 # Wait 3 minutes before restart service
