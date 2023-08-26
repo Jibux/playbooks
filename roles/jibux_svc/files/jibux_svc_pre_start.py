@@ -30,10 +30,13 @@ TTL = "60"
 IP_TYPE_PRIVATE = 'private'
 IP_TYPE_PUBLIC = 'public'
 
+CONDITION_FAILED_CODE = 1
+EXIT_ALLOW_RESTART = 255
 
-def fail(msg):
+
+def fail(msg, exit_code=CONDITION_FAILED_CODE):
     logger.error(msg)
-    sys.exit(1)
+    sys.exit(exit_code)
 
 
 def logging_config(log_dir):
@@ -92,7 +95,7 @@ def get_default_iface():
 def get_router_ip(iface):
     ips = [r[2] for r in def_routes() if r[0] == iface]
     if len(ips) == 0:
-        fail("Cannot get router IP")
+        fail("Cannot get router IP", EXIT_ALLOW_RESTART)
     return ip_hexa_to_dec(ips[0])
 
 
@@ -101,14 +104,14 @@ def ping(ip, iface):
     command = ["ping", "-q", "-c", "1", "-I", iface, ip]
     response = subprocess.call(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     if response != 0:
-        fail(f"Ping {ip} failed")
+        fail(f"Ping {ip} failed", EXIT_ALLOW_RESTART)
 
 
 def get_mac_from_ip(ip, iface):
     ping(ip, iface)
     macs = [a[3] for a in get_arp_table() if a[0] == ip and a[5] == iface]
     if len(macs) == 0:
-        fail(f"Cannot get MAC address for IP {ip} using {iface} interface")
+        fail(f"Cannot get MAC address for IP {ip} using {iface} interface", EXIT_ALLOW_RESTART)
     return macs[0]
 
 
