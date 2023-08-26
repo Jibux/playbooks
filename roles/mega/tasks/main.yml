@@ -1,0 +1,97 @@
+---
+- name: Add mega apt key
+  apt_key:
+    url: https://mega.nz/keys/MEGA_signing.key
+    keyring: /usr/share/keyrings/meganz-archive-keyring.gpg
+    state: present
+
+- name: Add mega repo
+  apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/meganz-archive-keyring.gpg] https://mega.nz/linux/repo/xUbuntu_{{ ansible_distribution_version }}/ ./"
+    filename: megasync.list
+    state: present
+
+- name: Install megacmd
+  apt:
+    name: megacmd
+    state: latest
+
+- name: Login status
+  command: mega-session
+  register: mega_session
+  check_mode: false
+  ignore_errors: true
+
+- assert:
+    that: not mega_session.failed
+    fail_msg: You must connect with MEGA account with '{{ ansible_user }}' user
+    success_msg: Connected with MEGA account
+  ignore_errors: true
+
+- when: mega_session.failed
+  block:
+    - pause:
+        prompt: "MEGA account email"
+      register: email
+    - pause:
+        prompt: "MEGA account password"
+        echo: false
+      register: password
+    - pause:
+        prompt: "MEGA totp code"
+        echo: false
+      register: totp_code
+
+    - name: Login to MEGA
+      command: mega-login --auth-code={{ totp_code.user_input }} {{ email.user_input }} {{ password.user_input }}
+      check_mode: false
+
+- name: List MEGA exclude
+  command: mega-exclude
+  register: mega_exclude
+  check_mode: false
+
+- name: Remove hidden files from MEGA exclude
+  command: mega-exclude -d '.*'
+  when: "'.*' in mega_exclude.stdout_lines"
+
+- name: mega-cli dir
+  file:
+    path: "{{ mega_cli_path }}"
+    owner: root
+    group: root
+    state: directory
+    mode: "0555"
+
+- set_fact:
+    mega_paths: "{{ mega_paths + paths }}"
+  vars:
+    paths: "{{ hostvars[inventory_hostname][item+'_mega_paths']|d([]) }}"
+  loop: "{{ group_names }}"
+
+- name: mega-cli config
+  template:
+    src: mega-cli-cfg.yaml.j2
+    dest: "{{ mega_cli_config }}"
+    mode: "0444"
+
+- name: mega-cli script
+  copy:
+    src: mega-cli.py
+    dest: "{{ mega_cli_script }}"
+    mode: "0555"
+
+- name: mega-cmd service install
+  template:
+    src: mega-cmd.service
+    dest: /etc/systemd/system/mega-cmd.service
+    mode: "0444"
+  notify:
+    - Systemd daemon reload
+
+- name: Launch mega-cli.py
+  command: "{{ mega_cli_exec }} -v"
+  register: mega_cli_output
+
+- debug:
+    msg: "{{ mega_cli_output }}"

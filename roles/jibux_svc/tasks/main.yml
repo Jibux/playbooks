@@ -17,14 +17,6 @@
     - compose_files
 
 - include_tasks:
-    file: mega.yml
-    apply:
-      tags:
-        - mega
-  tags:
-    - mega
-
-- include_tasks:
     file: ovh_cred.yml
     apply:
       tags:

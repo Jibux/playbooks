@@ -1,0 +1,5 @@
+---
+mega_cli_path: /opt/mega-cli
+mega_cli_script: "{{ mega_cli_path }}/mega-cli.py"
+mega_cli_config: "{{ mega_cli_path }}/mega-cli-cfg.yaml"
+mega_cli_exec: "{{ mega_cli_script }} -f {{ mega_cli_config }}"

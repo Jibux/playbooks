@@ -1,0 +1,2 @@
+---
+mega_paths: "{{ host_specific_mega_paths|d([]) }}"

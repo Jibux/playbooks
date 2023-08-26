@@ -57,14 +57,6 @@
     group: root
     mode: "0444"
 
-- name: mega-cmd service install
-  template:
-    src: mega-cmd.service
-    dest: /etc/systemd/system/mega-cmd.service
-    mode: "0444"
-  notify:
-    - Systemd daemon reload
-
 - name: Docker compose service install
   template:
     src: jibux_svc.service.j2

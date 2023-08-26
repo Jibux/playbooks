@@ -1,0 +1,6 @@
+---
+{% for item in mega_paths %}
+- id: {{ item.id }}
+  local: {{ item.local }}
+  remote: {{ item.remote }}
+{% endfor %}

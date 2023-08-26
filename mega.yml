@@ -1,0 +1,5 @@
+---
+- hosts: mega_cli
+  become: true
+  roles:
+    - mega

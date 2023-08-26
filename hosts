@@ -48,4 +48,8 @@ jibux-server.local
 jibux-server.local
 jibux-taf
 jibux-home
+[mega_cli]
+[mega_cli:children]
+jibux_svc
+raspberry
 

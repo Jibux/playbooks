@@ -17,7 +17,8 @@ ExecStart=docker compose up --remove-orphans
 ExecStop=docker compose down
 
 ExecCondition={{ svc_scripts_dir }}/jibux_svc_pre_start.py --domain={{ svc_host }} --secrets-dir={{ ovh_secrets_path }} --iface {{ svc_interface }} --config {{ svc_dir }}/jibux_svc_config.yaml --log-dir="{{ scripts_log_dir }}" --check-url {{ svc_check_url }}
-ExecStartPre=systemctl start mega-cmd.service
+ExecCondition=systemctl start mega-cmd.service
+ExecCondition={{ mega_cli_exec }} -w {{ jibux_svc_mega_paths[0].id }}
 
 [Install]
 WantedBy=multi-user.target
