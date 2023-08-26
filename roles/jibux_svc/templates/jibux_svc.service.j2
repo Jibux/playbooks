@@ -9,7 +9,8 @@ StartLimitBurst=2
 Restart=on-failure
 # Wait 3 minutes before restart service
 RestartSec=180
-StandardOutput=null
+StandardOutput=append:{{ general_log_path }}
+StandardError=append:{{ general_log_path }}
 WorkingDirectory={{ svc_dir }}
 
 ExecStart=docker compose up --remove-orphans

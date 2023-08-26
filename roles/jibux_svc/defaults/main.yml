@@ -11,6 +11,7 @@ svc_scripts_dir: "{{ svc_dir }}/scripts"
 mega_data_path: /dev_and_scripts/jibux_svc_data
 ovh_secrets_path: "{{ svc_data_dir }}/secrets"
 log_dir: /var/log/jibux_svc
+general_log_path: "{{ log_dir }}/general.log"
 traefik_log_dir: "{{ log_dir }}/traefik"
 scripts_log_dir: "{{ log_dir }}/scripts"
 svc_enabled: false
