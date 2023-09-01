@@ -9,3 +9,5 @@ svc_router_whitelist:
     description: Home
   - mac: 24:95:04:8f:37:c0
     description: Mayumba
+  - mac: b8:26:6c:ce:5d:e2
+    description: Bvd Jean-Mermoz
