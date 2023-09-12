@@ -18,7 +18,7 @@ services:
       - KILL
     healthcheck:
       disable: true
-    restart: unless-stopped
+    restart: no
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.radicale.rule=Host(`{{ dav_sync_host }}`)"
@@ -45,7 +45,7 @@ services:
       - "OVH_APPLICATION_KEY_FILE=/run/secrets/ovh_application_key"
       - "OVH_APPLICATION_SECRET_FILE=/run/secrets/ovh_application_secret"
       - "OVH_CONSUMER_KEY_FILE=/run/secrets/ovh_consumer_key"
-    restart: always
+    restart: no
     ports:
       - 443:443
     volumes:
