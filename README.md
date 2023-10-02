@@ -5,6 +5,14 @@
 See [README.md](roles/jibux_svc/README.md).
 
 ```bash
-ansible-playbook jibux_svc.yml -l jibux-taf -D
+ansible-playbook playbooks/jibux_svc.yml -l jibux-taf -D
+```
+
+## MEGA cli
+
+See [README.md](roles/mega/README.md).
+
+```bash
+ansible-playbook playbooks/mega.yml -l jibux-taf -D
 ```
 
