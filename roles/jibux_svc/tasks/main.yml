@@ -21,6 +21,7 @@
     apply:
       tags:
         - ovh_cred
+  when: setup_credentials | d(false) | bool
   tags:
     - ovh_cred
 
