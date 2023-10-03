@@ -2,7 +2,7 @@
 
 Automate MEGA cmd cli setup.
 
-Gathers all facts named `<name>_mega_paths` and write `mega-cli.py` configuration accordingly.
+Gathers all facts named `<name>_mega_paths` + `host_specific_mega_paths` and write `mega-cli.py` configuration accordingly.
 
 ## `mega-cli.py` script
 
