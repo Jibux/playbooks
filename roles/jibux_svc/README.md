@@ -13,7 +13,6 @@ Services can run into a device not publicly accessible (private IPv4) or publicl
 * `dav_sync_host` is an alias to `svc_host`. It is used to access the Radicale server.
 * `svc_interface` is the network interface where to get the IPv6 or the private IPv4 from.
 * `svc_enabled` stands for `jibux_svc` service activation/deactivation at boot time.
-* `setup_credentials` (defaults to `false`) to setup OVH API credentials for DNS operations.
 
 ## Structure
 
