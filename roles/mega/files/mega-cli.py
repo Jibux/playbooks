@@ -57,7 +57,11 @@ def mega_sync_cmd(cmd=[]):
 
 
 def filter_output(output, first_line):
-    return output[output.index(first_line) + 1:]
+    try:
+        index = output.index(first_line)
+        return output[index + 1:]
+    except ValueError:
+        return []
 
 
 def get_configured_mega_paths():

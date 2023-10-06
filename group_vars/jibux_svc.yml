@@ -3,6 +3,12 @@ svc_dir: /opt/jibux_svc
 svc_data_dir: "{{ svc_dir }}/data"
 svc_scripts_dir: "{{ svc_dir }}/scripts"
 jibux_svc_mega_paths:
-  - id: jibux_svc_data
-    local: "{{ svc_data_dir }}"
-    remote: /dev_and_scripts/jibux_svc_data
+  - id: jibux_svc_data_radicale
+    local: "{{ svc_data_dir }}/radicale"
+    remote: /dev_and_scripts/jibux_svc_data/radicale
+  - id: jibux_svc_data_traefik
+    local: "{{ svc_data_dir }}/traefik"
+    remote: /dev_and_scripts/jibux_svc_data/traefik
+  - id: jibux_svc_data_secrets
+    local: "{{ svc_data_dir }}/secrets"
+    remote: /dev_and_scripts/jibux_svc_data/secrets

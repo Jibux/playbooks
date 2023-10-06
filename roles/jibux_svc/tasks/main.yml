@@ -16,6 +16,13 @@
     - compose
     - compose_files
 
+- name: Launch mega-cli.py
+  command: "{{ mega_cli_exec }} -v -w jibux_svc_data_traefik,jibux_svc_data_secrets"
+  register: mega_cli_output
+
+- debug:
+    msg: "{{ mega_cli_output }}"
+
 - include_tasks:
     file: ovh_cred.yml
     apply:
