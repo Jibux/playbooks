@@ -8,6 +8,14 @@
     - softs
 
 - include_tasks:
+    file: ovh_cred.yml
+    apply:
+      tags:
+        - ovh_cred
+  tags:
+    - ovh_cred
+
+- include_tasks:
     file: compose.yml
     apply:
       tags:
@@ -15,14 +23,6 @@
   tags:
     - compose
     - compose_files
-
-- include_tasks:
-    file: ovh_cred.yml
-    apply:
-      tags:
-        - ovh_cred
-  tags:
-    - ovh_cred
 
 - name: jibux_svc service enabled/disabled
   systemd:
