@@ -169,11 +169,13 @@ def check_item_status(item_to_configure):
                 raise Exception(f"{item_to_configure['id']} is in error ({error})")
             state = item_sync_state(configured_item)
             status = item_sync_status(configured_item)
-            logger.info(f"{item_to_configure['id']} sync run state '{state}', status '{status}'")
+            msg = f"{item_to_configure['id']} sync run state '{state}', status '{status}'"
             if is_sync_state_stopped(state):
                 raise Exception(f"{item_to_configure['id']} is not running")
             if is_item_synced(status):
+                logger.debug(msg)
                 return True
+            logger.info(msg)
             return False
     raise Exception(f"{item_to_configure['id']} is not configured")
 
