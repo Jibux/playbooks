@@ -1,4 +1,5 @@
 # TODO
 
-* Secure IPV6 (all services like rpcbind must listen localhost only)
+* Secure IPV6 (all services must listen localhost only)
+* disable rpcbind
 
