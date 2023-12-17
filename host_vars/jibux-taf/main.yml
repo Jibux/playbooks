@@ -1,7 +1,7 @@
 ---
 ansible_connection: local
 svc_enabled: true
-svc_interface: wlo1
+svc_interface: wlp0s20f3
 svc_router_whitelist:
   - mac: f4:42:8f:11:55:a2
     description: Samsung Galaxy A3 connection sharing
