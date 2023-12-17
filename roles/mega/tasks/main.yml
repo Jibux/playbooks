@@ -8,7 +8,7 @@
 - name: Add mega repo
   apt_repository:
     repo: "deb [signed-by=/usr/share/keyrings/meganz-archive-keyring.gpg] https://mega.nz/linux/repo/xUbuntu_{{ ansible_distribution_version }}/ ./"
-    filename: megasync.list
+    filename: megasync
     state: present
 
 - name: Install megacmd
