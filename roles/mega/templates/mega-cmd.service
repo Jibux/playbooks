@@ -1,8 +1,10 @@
 [Unit]
 Description=Mega-CMD systemd service
-After=network.target
+After=network-online.target auditd.service
+Wants=network-online.target
 [Service]
-Environment="HOME=/root"
+Environment=HOME=/root
+Environment=ROOT_HOME=/root
 Restart=no
 ExecStart=/usr/bin/mega-cmd-server
 
