@@ -3,6 +3,7 @@ Description=Mega-CMD systemd service
 After=network-online.target auditd.service
 Wants=network-online.target
 [Service]
+Type=exec
 Environment=HOME=/root
 Environment=ROOT_HOME=/root
 Restart=no
