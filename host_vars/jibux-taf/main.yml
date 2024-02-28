@@ -7,7 +7,5 @@ svc_router_whitelist:
     description: Samsung Galaxy A3 connection sharing
   - mac: f4:ca:e5:42:6d:e6
     description: Home
-  - mac: 24:95:04:8f:37:c0
-    description: Mayumba
-  - mac: b8:26:6c:ce:5d:e2
+  - mac: c0:3c:04:8c:43:2c
     description: Bvd Jean-Mermoz
