@@ -1,11 +1,11 @@
 ---
 ansible_connection: local
 svc_enabled: true
-svc_interface: wlp0s20f3
 svc_router_whitelist:
-  - mac: f4:42:8f:11:55:a2
-    description: Samsung Galaxy A3 connection sharing
   - mac: f4:ca:e5:42:6d:e6
     description: Home
+  - ssid: Pixel7a_Jibux
+    description: Pixel 7a wifi connection sharing
   - mac: c0:3c:04:8c:43:2c
     description: Bvd Jean-Mermoz
+    iface: enp46s0
