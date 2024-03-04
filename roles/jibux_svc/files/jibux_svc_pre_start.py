@@ -66,6 +66,20 @@ def get_ovh_client(secrets_dir) -> ovh.Client:
     )
 
 
+def get_wifi_info():
+    response = subprocess.run(['iwgetid'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    if response.returncode != 0:
+        logger.info("iwgetid command failed")
+        return (None, None)
+    line = response.stdout.rstrip()
+    pattern = r"(?P<iface>[^\s]+)\s+ESSID:\"(?P<ssid>[^\s]+)\"$"
+    m = re.search(pattern, line)
+    if m:
+        return (m.group("iface"), m.group("ssid"))
+    else:
+        return (None, None)
+
+
 def ip_hexa_to_dec(ip):
     return socket.inet_ntoa(struct.pack("<L", int(ip, 16)))
 
@@ -88,17 +102,6 @@ def def_routes():
     return sorted([r for r in get_routing_table() if r[1] == WORLD_IP], key=itemgetter(6))
 
 
-def get_default_iface():
-    return def_routes()[0][0]
-
-
-def get_router_ip(iface):
-    ips = [r[2] for r in def_routes() if r[0] == iface]
-    if len(ips) == 0:
-        fail("Cannot get router IP", EXIT_ALLOW_RESTART)
-    return ip_hexa_to_dec(ips[0])
-
-
 def ping(ip, iface):
     logger.info(f"Ping {ip} with {iface} interface")
     command = ["ping", "-q", "-c", "1", "-I", iface, ip]
@@ -113,6 +116,23 @@ def get_mac_from_ip(ip, iface):
     if len(macs) == 0:
         fail(f"Cannot get MAC address for IP {ip} using {iface} interface", EXIT_ALLOW_RESTART)
     return macs[0]
+
+
+def format_router_info(iface, router_ip):
+    formated_ip = ip_hexa_to_dec(router_ip)
+    return (iface, formated_ip, get_mac_from_ip(formated_ip, iface))
+
+
+def get_ip_router_info():
+    info = [format_router_info(r[0], r[2]) for r in def_routes()]
+    if len(info) == 0:
+        fail("Cannot get router information", EXIT_ALLOW_RESTART)
+    return info
+
+
+def print_ip_router_info(info):
+    for (iface, router_ip, router_mac) in info:
+        logger.info(f"Interface {iface} - router IP {router_ip} - router mac {router_mac}")
 
 
 def get_ipv4(iface):
@@ -144,23 +164,36 @@ def get_ipv6(iface):
     return format_ipv6(ips[0])
 
 
-def check_router_whitelist(iface, router_whitelist):
-    if router_whitelist is None or len(router_whitelist) == 0:
-        return False
-    router_ip = get_router_ip(iface)
-    logger.info(f"Router IP {router_ip}")
-    router_mac = get_mac_from_ip(router_ip, iface)
-    logger.info(f"Router MAC {router_mac}")
+def extract_matching_iface(conf, ip_router_info):
+    matching_ifaces = [iface for (iface, _, router_mac) in ip_router_info if conf.get('mac') == router_mac]
+    if len(matching_ifaces) > 0:
+        for iface in matching_ifaces:
+            if conf.get('iface') == iface:
+                return iface
+        # Defaults to the first interface
+        return matching_ifaces[0]
+    return None
+
+
+def get_used_conf(router_whitelist):
+    ip_router_info = get_ip_router_info()
+    print_ip_router_info(ip_router_info)
+    (wifi_iface, ssid) = get_wifi_info()
+    if wifi_iface:
+        logger.info(f"Connected to wifi network '{ssid}' with '{wifi_iface}'")
     for conf in router_whitelist:
-        if conf['mac'] == router_mac:
-            return conf
-    fail('Router is not in whitelist')
+        if ssid and ssid == conf.get('ssid'):
+            logger.info(f"Wifi network '{ssid}' is matching config")
+            return (wifi_iface, conf)
+        matching_iface = extract_matching_iface(conf, ip_router_info)
+        if matching_iface:
+            return (matching_iface, conf)
+    fail('No router match whitelist')
 
 
-def ip_setup(iface, config):
-    used_iface = get_default_iface() if iface is None else iface
+def ip_setup(config):
+    (used_iface, spec_conf) = get_used_conf(config.get('router_whitelist'))
     logger.info(f"Using interface {used_iface}")
-    spec_conf = check_router_whitelist(used_iface, config.get('router_whitelist'))
     ip_type = spec_conf.get('ip_type', IP_TYPE_PRIVATE)
     if spec_conf.get('ipv4', True):
         ipv4 = get_ipv4_public() if ip_type == IP_TYPE_PUBLIC else get_ipv4(used_iface)
@@ -273,7 +306,6 @@ def update_dns(record, domain, secrets_dir, force):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--ip", help="Use this ip", required=False)
-    parser.add_argument("-i", "--iface", help="Use this interface", required=False)
     parser.add_argument("--domain", help="Target domain", required=True)
     parser.add_argument(
         "--secrets-dir",
@@ -302,7 +334,7 @@ def main():
     else:
         config = {}
 
-    record_list = ip_setup(args.iface, config)
+    record_list = ip_setup(config)
 
     if args.check_url:
         check_remote_svc(args.check_url)

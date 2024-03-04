@@ -11,7 +11,6 @@ Services can run into a device not publicly accessible (private IPv4) or publicl
 
 * `svc_host` is the domain used to access the services. It will resolve the IP of the host. Its IP is updated by the `jibux_svc_pre_start.py` script. This script is launched in `ExecStartPre` by `jibux_svc.service`. It will fail if the discovered router MAC address is not matching `svc_router_whitelist`.
 * `dav_sync_host` is an alias to `svc_host`. It is used to access the Radicale server.
-* `svc_interface` is the network interface where to get the IPv6 or the private IPv4 from.
 * `svc_enabled` stands for `jibux_svc` service activation/deactivation at boot time.
 
 ## Structure
@@ -29,12 +28,13 @@ Services can run into a device not publicly accessible (private IPv4) or publicl
 ---
 router_whitelist:
   - description: Mobile network sharing
+    ssid: My wifi network  # Matching wifi network name
     ipv6: true  # Defaults to false
     ipv4: false  # Defaults to true
-    mac: f4:50:8f:44:55:ab  # Router mac address
   - description: Home
-    mac: f5:eb:73:42:d0:e4
+    mac: f5:eb:73:42:d0:e4  # Matching router mac address
     ip_type: public  # Defaults to 'private' (only for ipv4)
+    iface: eth0  # Use this interface if possible
 ```
 
 ### `data` directory
