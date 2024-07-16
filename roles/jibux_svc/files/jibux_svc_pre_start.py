@@ -72,7 +72,7 @@ def get_wifi_info():
         logger.info("iwgetid command failed")
         return (None, None)
     line = response.stdout.rstrip()
-    pattern = r"(?P<iface>[^\s]+)\s+ESSID:\"(?P<ssid>[^\s]+)\"$"
+    pattern = r"(?P<iface>[^\s]+)\s+ESSID:\"(?P<ssid>[^\"]+)\"$"
     m = re.search(pattern, line)
     if m:
         return (m.group("iface"), m.group("ssid"))
