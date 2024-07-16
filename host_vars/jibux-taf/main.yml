@@ -4,7 +4,7 @@ svc_enabled: true
 svc_router_whitelist:
   - mac: f4:ca:e5:42:6d:e6
     description: Home
-  - ssid: Pixel7a_Jibux
+  - ssid: Pixel 7a JBH
     description: Pixel 7a wifi connection sharing
   - mac: c0:3c:04:8c:43:2c
     description: Bvd Jean-Mermoz
