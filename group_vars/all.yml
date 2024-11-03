@@ -1,0 +1,4 @@
+---
+user_home_dir: "{{ lookup('env', 'HOME' ) }}"
+project_root_path: "{{ lookup('ansible.builtin.pipe', 'git rev-parse --show-toplevel' ) }}"
+

@@ -1,0 +1,4 @@
+---
+- hosts: desktop
+  roles:
+    - scripts

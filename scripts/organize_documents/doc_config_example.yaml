@@ -1,0 +1,60 @@
+---
+# Process documents in 'paths'
+paths:
+  - ~/Downloads
+  - ~/my_cloud_dir
+
+# 'pages' defaults to [1]
+# 'lines' defaults to [1]
+files_patterns:
+  - name: 'Bills with several formats'
+    file_type: pdf
+    method: read_file
+    dest_prefix: '/data/Documents/Bills/'
+    documents:
+      - name: "Format 1"
+        patterns:
+          # Match either line 2, 4, or 10
+          - lines: [2, 4, 10]
+            regex: '^\s+Bill (\d{2})-(\d{4})'
+            dest: '%2%-%1%_bill.pdf'
+      - name: "Format 2"
+        patterns:
+          # Line 1 on page 2 or 3
+          - pages: [2, 3]
+            regex: '^\s+BILL\s+OF\s+\d{2}/(\d{2})/(\d{4})'
+            dest: '%2%-%1%_bill.pdf'
+  - name: 'Multi patterns to build file name'
+    file_type: pdf
+    method: read_file
+    dest_prefix: '/data/Foo/'
+    documents:
+      - name: "Foo"
+        patterns:
+          - lines: [28]
+            regex: '^\s+Tool (\d+)'
+            dest: '%1%'
+          # Concat dest with:
+          - lines: [42]
+            regex: 'Account (\d+) of ([a-z]+)'
+            dest: '-%2%/%1%'
+  - name: 'File name match'
+    file_type: pdf
+    method: file_name
+    dest_prefix: '/data/Bar/'
+    documents:
+      - name: "Bar"
+        patterns:
+          - regex: '^foobar_765482328.+'
+            dest: 'Personal account/'
+  - name: 'Invalid file_type'
+    file_type: pdf2
+    dest_prefix: '/foobar'
+    method: read_file
+    documents:
+      - name: "Foo"
+        patterns:
+          - pages: [1]
+            lines: [1]
+            regex: '^\stoto'
+            dest: '%2%-tutu'

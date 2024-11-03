@@ -1,0 +1,13 @@
+line-length = 120
+indent-width = 4
+
+[lint]
+select = ["E", "F", "UP", "I", "W"]
+ignore = ["E266"]
+preview = true
+
+[format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+preview = true

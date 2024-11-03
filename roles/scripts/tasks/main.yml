@@ -1,0 +1,6 @@
+---
+- name: Generate python scripts aliases
+  template:
+    src: python_bash_aliases.j2
+    dest: "{{ user_home_dir }}/.bash_aliases_python"
+    mode: "0400"

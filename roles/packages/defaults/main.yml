@@ -1,0 +1,17 @@
+---
+apt_packages:
+  - git
+  - libpoppler-cpp-dev
+  - vim
+  - vim-common
+  - vim-gtk3
+  - vim-gui-common
+  - vim-nox
+  - vim-runtime
+  - vim-tiny
+    # - rxvt-unicode-256color
+  - tmux
+  - tmux-plugin-manager
+  - pandoc
+  - exfatprogs
+  - shellcheck
