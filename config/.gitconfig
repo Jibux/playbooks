@@ -1,0 +1,86 @@
+[include]
+	path = ~/.gitconfig.local
+
+[core]
+	editor = vim
+	pager = diff-so-fancy | less -RFX
+[alias]
+	co = checkout
+	sw = switch
+	br = branch
+	bra = branch -a
+	brr = branch -r
+	ci = commit
+	cia = commit --amend
+	ciaa = commit --amend -a
+	cif = commit --fixup
+	st = status
+	sethead = remote set-head origin -a
+	last = log -1 HEAD
+	lasthash = log -n1 --format=format:"%H" HEAD
+	msghash = "!f() { git log --grep=\"^$1$\" -n1 --pretty=format:'%h'; }; f"
+	hashmsg = log --format=%s -n 1
+	unstage = reset HEAD --
+	defbr = "!git remote show origin | sed -n '/HEAD branch/s/.*: //p'"
+	pushu = "!git push --set-upstream origin \"$(git rev-parse --abbrev-ref HEAD)\""
+	mergem = "!defbr=$(git defbr) && br=$(git rev-parse --abbrev-ref HEAD) && [ \"$br\" != \"$defbr\" ] && git co $defbr && git pull && git co $br && git rb $defbr && git co $defbr && git merge $br && git push origin $defbr && git br -D $br && git push origin :$br"
+	rebasem = "!defbr=$(git defbr) && br=$(git rev-parse --abbrev-ref HEAD) && [ \"$br\" != \"$defbr\" ] && git pull && git co $defbr && git pull && git co $br && git rb $defbr && git pushf"
+	pushf = push -f
+	sync = "!git pull --rebase && git push"
+	syncf = "!git pull --rebase && git pushf"
+	rb = rebase
+	rba = rebase --abort
+	rbc = rebase --continue
+	rbs = rebase --skip
+	rbm = rebase refs/remotes/origin/HEAD
+	rbmi = rbm -i
+	rbmis = rbmi --autosquash
+	rst = reset
+	sh = show
+	cpk = cherry-pick
+	cpka = cherry-pick --abort
+	cpkc = cherry-pick --continue
+	cpktobr = "!f() { msg=$(git hashmsg \"$2\") && git co $1 && git pull && hash_revert=$(git msghash \"$msg\") && [ -n \"$hash_revert\" ] && git revert $hash_revert ; git cpk $2 && git sync && git co -;}; f"
+	gr = grep
+	rv = revert
+	l = log --graph --pretty=format:'%Cred%h%Creset%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+	la = log --graph --pretty=format:'%Cred%h%Creset%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all
+	las = log --oneline --graph --all --decorate --simplify-by-decoration
+	diffc = diff --cached
+	diffw = diff -w
+	diffwo = diff --word-diff
+	diffst = diff --name-status
+[pull]
+	rebase = true
+[rerere]
+	enabled = true
+[push]
+	default = simple
+[fetch]
+	prune = true
+[rebase]
+	autosquash = true
+	updateRefs = true
+#[pager]
+#	log = diff-so-fancy | less --tabs=2 -RFX
+#	show = diff-so-fancy | less --tabs=2 -RFX
+#	diff = diff-so-fancy | less --tabs=2 -RFX
+[color]
+	ui = true
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+[color "diff"]
+	meta = 11
+	frag = magenta bold
+	commit = yellow bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+[diff-so-fancy]
+	stripLeadingSymbols = false
+
+
+# vi:syntax=gitconfig

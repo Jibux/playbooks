@@ -1,0 +1,200 @@
+!-------------------------------------------------------------------------------
+! Xft settings
+!-------------------------------------------------------------------------------
+
+! Correct dpi for the NVIDIA driver to get normal fonts instead of huge ones
+!Xft*dpi:                    96
+!Xft*antialias:              false
+!Xft*rgba:                   rgb
+!Xft*hinting:                true
+!Xft*hintstyle:              hintslight
+
+
+!-------------------------------------------------------------------------------
+! xterm settings
+!-------------------------------------------------------------------------------
+
+xterm*saveLines: 10000
+xterm*AllowIconInput: on
+xterm*Background: black
+xterm*Border: grey
+xterm*font: fixed
+!xterm*font: -*-fixed-*-*-*-14-*-*-*-*-*-*-* 
+xterm*boldFont: fixed
+xterm*DeiconifyWarp: off
+!xterm*Font: 6x13
+!xterm*Font:  *-fixed-*-*-*-30-*
+XTerm.VT100.geometry: 89x29
+xterm*Foreground: white
+xterm*InternalBorder: 1
+xterm*MarginBell: off
+xterm*MenuFont: timrom12
+xterm*Mouse: yellow
+xterm*TitleFont: vtbold
+!xterm*charClass: 33:48,37:48,45-47:48,64:48
+xterm*colorAttrMode: true
+xterm*colorMode: true
+xterm*curses: on
+xterm*cutNewline: off
+xterm*jumpScroll: on
+xterm*multiClickTime: 500
+xterm*multiScroll: on
+xterm*reverseVideo: on
+xterm*reverseWrap: off
+xterm*scrollBar: on
+xterm*scrollbar*thickness: 5
+XTerm*on2Clicks:  regex [^/@ \n]+
+XTerm*on3Clicks:  regex [^ \n]+
+XTerm*on4Clicks:  regex [^#$]+
+XTerm*on5Clicks:  line
+
+
+!-------------------------------------------------------------------------------
+! URxvt settings
+!-------------------------------------------------------------------------------
+
+URxvt*depth:                32
+URxvt*geometry:             90x30
+URxvt*transparent:          false
+URxvt*fading:               0
+! URxvt*urgentOnBell:         true
+! URxvt*visualBell:           true
+URxvt*loginShell:           true
+URxvt*internalBorder:       3
+URxvt*lineSpace:            0
+!URxvt*termName:rxvt-256color
+!URxvt.title: 
+
+! Fonts
+!URxvt*allow_bold:           false
+!URxvt*font:                 -*-terminus-medium-r-normal-*-12-120-72-72-c-60-iso8859-1
+!URxvt*font: xft:Monospace:pixelsize=14
+URxvt*font: xft:Bitstream Vera Sans Mono:style=Regular:pixelsize=14:antialias=true
+! For powerline fonts, go to https://github.com/powerline/fonts
+!URxvt*font: xft:Source Code Pro For Powerline:pixelsize=14,xft:PowerlineSymbols
+!URxvt*font: xft:DejaVu Sans Mono for Powerline:pixelsize=14,xft:PowerlineSymbols
+
+!URxvt*boldFont: xft:Monospace:pixelsize=14
+
+! Fix font space
+!URxvt*letterSpace: -1
+
+!URxvt*keysym.Control-;: resize-font:smaller
+!URxvt*keysym.Control-,: resize-font:bigger
+
+
+
+! Scrollbar
+URxvt*scrollStyle:          rxvt
+URxvt*scrollBar: true
+URxvt*scrollColor: #ff0000
+
+URxvt*scrollBar_floating: yes
+
+URxvt*scrollBar_right: true
+! scrollbar style - rxvt (default), plain (most compact), next, or xterm
+URxvt*scrollstyle: plain
+
+! Do not scroll if we look at the top while there is output in stdout
+URxvt*scrollTtyOutput:      false
+! Sinon oui
+URxvt*scrollWithBuffer:     true
+URxvt*scrollTtyKeypress:    true
+
+
+! Cut chars
+URxvt*cutchars: ""''(),<>[]{}|:⑂
+
+! Perl extensions
+urxvt*perl-lib:     /usr/lib/urxvt/perl
+!URxvt.perl-ext-common: default,tabbed,matcher,clipboard
+URxvt*perl-ext-common: default,tabbed-custom,matcher,clipboard,font-size
+
+URxvt*matcher.button:       1
+URxvt*urlLauncher:          firefox
+
+! Cursor
+URxvt*cursorBlink:          true
+!URxvt*cursorColor:          #657b83
+!URxvt*cursorColor2: black
+URxvt*cursorUnderline:      false
+
+! Pointer
+URxvt*pointerBlank:         true
+
+
+!URxvt*transparent:true
+! Don t use with tintColor
+!URxvt*shading:2
+!URxvt*tintColor:#ffffff
+
+! Configure correctly M-Left et M-Right to jump between words
+!URxvt*keysym.Meta-Left: \033[1;5D
+!URxvt*keysym.Meta-Right: \033[1;5C
+URxvt*keysym.Control-Left: \033[1;5D
+URxvt*keysym.Control-Right: \033[1;5C
+
+! Active ou pas la transparence
+URxvt*keysym.Control-Meta-t: command:\033]11;[90]#000000\007
+URxvt*keysym.Control-Meta-y: command:\033]11;#101010\007
+
+URxvt*keysym.Meta-c: perl:clipboard:copy
+URxvt*keysym.Meta-v: perl:clipboard:paste
+URxvt*saveLines: 5000
+
+
+! Désactive les 'KEYCAP PICTURE INSERT MODE'
+URxvt*iso14755: false
+URxvt*iso14755_52: false
+
+URxvt.buffered: true
+
+URxvt*tabbed.tabbar-fg: 11
+URxvt*tabbed.tabbar-bg: 8
+URxvt*tabbed.tab-fg: 1
+URxvt*tabbed.tab-bg: 0
+
+
+! Color theme
+
+! Source http://github.com/altercation/solarized
+#include ".config/xdefaults/themes/solarized"
+! Make solarized theme work with URxvt
+URxvt.intensityStyles: false
+
+
+!COLORS AND GRAPHICS
+!
+!If graphics support was enabled at compile-time, rxvt can be queried with ANSI escape sequences and can address individual pixels instead of text
+!characters. Note the graphics support is still considered beta code.
+!
+!In addition to the default foreground and background colours, rxvt can display up to 16 colours (8 ANSI colours plus high-intensity bold/blink
+!versions of the same). Here is a list of the colours with their rgb.txt names.
+!
+!color0 	(black) 	= Black
+!color1 	(red) 	        = Red3
+!color2 	(green) 	= Green3
+!color3 	(yellow) 	= Yellow3
+!color4 	(blue) 	        = Blue3
+!color5 	(magenta) 	= Magenta3
+!color6 	(cyan) 	        = Cyan3
+!color7 	(white) 	= AntiqueWhite
+!color8 	(bright black) 	= Grey25
+!color9 	(bright red) 	= Red
+!color10 (bright green) 	= Green
+!color11 (bright yellow) = Yellow
+!color12 (bright blue) 	= Blue
+!color13 (bright magenta)= Magenta
+!color14 (bright cyan) 	= Cyan
+!color15 (bright white) 	= White
+!foreground 		= Black
+!background 		= White
+!
+!It is also possible to specify the colour values of foreground, background, cursorColor, cursorColor2, colorBD, colorUL as a number 0-15, as a
+!convenient shorthand to reference the colour name of color0-color15.
+!
+!Note that -rv ("reverseVideo: True") simulates reverse video by always swapping the foreground/background colours. This is in contrast to xterm(1)
+!where the colours are only swapped if they have not otherwise been specified. For example,
+!
+!rxvt -fg Black -bg White -rv
+

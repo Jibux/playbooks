@@ -1,0 +1,47 @@
+# Custom transparent theme by Jean-Baptiste Hugon
+
+# COLORS : black, red, green, yellow, blue, magenta, cyan, white, default
+# OPTIONS : normal, standout, underline, reverse, blink, dim, bold, protect
+
+##BEGIN##
+
+# [Name ]		[ FG ]		[ BG ]		[Options]
+
+background		= default		default
+frame			= white		default
+window_title		= white		default
+directory		= green		default	bold
+selected_directory	= red		cyan	bold
+playlist		= white		default	bold
+selected_playlist	= white		blue	bold
+file			= green		default	bold
+selected_file		= red		cyan	bold
+marked_file		= default		default	bold
+marked_selected_file	= default		default	bold
+info			= red		default	bold
+# selected_info      - see selected directory
+selected_info		= red		default	bold
+# marked_info        - a file (its time) that is currently being played
+marked_info		= default		default	bold
+# marked_selected_info - a file (its time) that is currently being played and is also selected using arrows
+marked_selected_info	= default		default	bold
+status			= white		default
+title			= green		default	bold
+state			= white		default	bold
+current_time		= white		default	bold
+time_left		= white		default	bold
+total_time		= white		default	bold
+time_total_frames	= white		default
+sound_parameters	= white		default	bold
+legend			= white		default
+disabled		= blue		default	bold
+enabled			= white		default	bold
+empty_mixer_bar		= black		yellow	bold
+filled_mixer_bar	= black		red	bold
+empty_time_bar		= white		yellow
+filled_time_bar		= black		red
+entry			= green		black	bold
+entry_title		= blue		black	bold
+error			= red		default	bold
+message			= green		default	bold
+plist_time		= white		default	bold

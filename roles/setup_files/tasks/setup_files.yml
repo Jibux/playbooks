@@ -1,0 +1,22 @@
+---
+- include_tasks:
+    file: setup_file.yml
+  loop: "{{ setup_files }}"
+  loop_control:
+    loop_var: setup_file
+  vars:
+    user_name: "{{ ansible_env.USER }}"
+    home_dir: "{{ ansible_env.HOME }}"
+  when: not setup_file.root_only|d(false)
+
+- become: true
+  block:
+    - include_tasks:
+        file: setup_file.yml
+      loop: "{{ setup_files }}"
+      loop_control:
+        loop_var: setup_file
+      vars:
+        user_name: root
+        home_dir: /root
+      when: setup_file.root_use|d(false)

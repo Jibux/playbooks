@@ -1,0 +1,74 @@
+---
+- set_fact:
+    setup_file_dest: "{{ (home_dir + '/' + setup_file.dest) if setup_file.dest[0] != '/' else setup_file.dest }}"
+  when: setup_file.dest is defined
+
+- set_fact:
+    setup_file_dest: "{{ home_dir }}/{{ setup_file.src }}"
+  when: setup_file.dest is not defined
+
+- set_fact:
+    setup_file_kind: "{{ setup_file.kind | d('file') }}"
+    setup_file_src: "{{ project_root_path }}/{{ setup_files_root }}/{{ setup_file.src }}"
+    setup_file_dir: "{{ setup_file_dest | dirname }}"
+    setup_file_dest_bkp: "{{ setup_file_dest }}.bkp_by_ansible"
+
+- name: ({{ user_name }}) Create {{ setup_file_dir }} dir
+  file:
+    path: "{{ setup_file_dir }}"
+    state: directory
+    mode: "0700"
+  when: setup_file_dir != home_dir
+
+- name: Stat file
+  stat:
+    path: "{{ setup_file_dest }}"
+  register: setup_file_dest_st
+
+- when: setup_file.backup | d(false)
+  block:
+    - name: Stat backup file
+      stat:
+        path: "{{ setup_file_dest_bkp }}"
+      register: setup_file_dest_bkp_st
+
+    - name: Backup current file
+      command: "mv {{ setup_file_dest }} {{ setup_file_dest_bkp }}"
+      args:
+        creates: "{{ setup_file_dest_bkp }}"
+        removes: "{{ setup_file_dest }}"
+      when:
+        - not setup_file_dest_bkp_st.stat.exists
+        - setup_file_dest_st.stat.exists and setup_file_dest_st.stat.isreg
+
+- when: setup_file_kind == "file"
+  block:
+    - name: Delete existing file
+      file:
+        path: "{{ setup_file_dest }}"
+        state: absent
+      when:
+        - user_name != "root"
+        - setup_file_dest_st.stat.exists
+        - setup_file_dest_st.stat.isreg
+
+    - name: Link {{ setup_file_dest }} to {{ setup_file_src }}
+      file:
+        src: "{{ setup_file_src }}"
+        dest: "{{ setup_file_dest }}"
+        state: link
+      when: user_name != "root"
+
+    - name: Copy {{ setup_file_src }} to {{ setup_file_dest }}
+      copy:
+        src: "{{ setup_file_src }}"
+        dest: "{{ setup_file_dest }}"
+        mode: "0600"
+      when: user_name == "root"
+
+- name: Copy template {{ setup_file_src }} to {{ setup_file_dest }}
+  template:
+    src: "{{ setup_file_src }}"
+    dest: "{{ setup_file_dest }}"
+    mode: "0600"
+  when: setup_file_kind == "template"

@@ -1,0 +1,5 @@
+---
+- name: Setup git repo {{ git_repo.repo }}
+  git:
+    repo: "{{ git_repo.repo }}"
+    dest: "{{ git_repositories_path }}/{{ git_repo.dest }}/{{ git_repo.repo | basename }}"

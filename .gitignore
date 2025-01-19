@@ -1,2 +1,3 @@
 *.retry
 *dpkg-old
+.git_repositories

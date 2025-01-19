@@ -1,3 +1,55 @@
 ---
 python_scripts:
   - scripts/organize_documents/organize_documents.py
+
+git_repositories:
+  - repo: https://github.com/majutsushi/urxvt-font-size
+    dest: urxvt
+  - repo: https://github.com/altercation/solarized
+    dest: vim
+  - repo: https://github.com/junegunn/vim-plug
+    dest: vim
+  - repo: https://github.com/nhdaly/tmux-better-mouse-mode
+    dest: tmux
+  - repo: https://github.com/tmux-plugins/tmux-sensible
+    dest: tmux
+  - repo: https://github.com/tmux-plugins/tpm
+    dest: tmux
+  - repo: https://github.com/cykerway/complete-alias
+    dest: bash
+  - repo: https://github.com/jonmosco/kube-ps1
+    dest: bash
+  - repo: https://github.com/so-fancy/diff-so-fancy
+    dest: git
+
+git_files:
+  - src: urxvt/urxvt-font-size/font-size
+    dest: .urxvt/ext/font-size
+  - src: vim/solarized/vim-colors-solarized/colors/solarized.vim
+    dest: .vim/colors/solarized.vim
+  - src: vim/vim-plug/plug.vim
+    dest: .vim/autoload/plug.vim
+  - src: tmux
+    dest: .tmux/plugins
+
+config_files:
+  - src: .bashrc
+    root_use: true
+    backup: true
+  - src: .bashrc.j2
+    dest: .bashrc.ansible
+    kind: template
+  - src: .vimrc
+    root_use: true
+  - src: .gitconfig
+  - src: .tmux.conf
+  - src: .screenrc
+  - src: terminator/config
+    dest: .config/terminator/config
+  - src: .moc/config
+  - src: .moc/themes/custom_theme
+  - src: .Xdefaults
+  - src: xdefaults
+    dest: .config/xdefaults
+  - src: .urxvt/ext/clipboard
+  - src: .urxvt/ext/tabbed-custom

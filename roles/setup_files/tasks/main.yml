@@ -1,0 +1,37 @@
+---
+- include_tasks:
+    file: setup_git_repo.yml
+    apply:
+      tags:
+        - git
+  loop: "{{ git_repositories }}"
+  loop_control:
+    loop_var: git_repo
+  tags:
+    - git
+
+- include_tasks:
+    file: setup_files.yml
+    apply:
+      tags:
+        - setup_files
+        - config_files
+  vars:
+    setup_files: "{{ config_files }}"
+    setup_files_root: config
+  tags:
+    - setup_files
+    - config_files
+
+- include_tasks:
+    file: setup_files.yml
+    apply:
+      tags:
+        - setup_files
+        - git_files
+  vars:
+    setup_files: "{{ git_files }}"
+    setup_files_root: .git_repositories
+  tags:
+    - setup_files
+    - git_files
