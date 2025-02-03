@@ -1,6 +1,7 @@
 ---
 python_scripts:
   - scripts/organize_documents/organize_documents.py
+  - scripts/tools/pdf_to_text.py
 
 git_repositories:
   - repo: https://github.com/majutsushi/urxvt-font-size
@@ -46,10 +47,17 @@ config_files:
   - src: .screenrc
   - src: terminator/config
     dest: .config/terminator/config
-  - src: .moc/config
-  - src: .moc/themes/custom_theme
+  - src: &item1 .moc/config
+    dest: *item1
+  - src: &item2 .moc/themes/custom_theme
+    dest: *item2
   - src: .Xdefaults
   - src: xdefaults
     dest: .config/xdefaults
-  - src: .urxvt/ext/clipboard
-  - src: .urxvt/ext/tabbed-custom
+  - src: &item3 .urxvt/ext/clipboard
+    dest: *item3
+  - src: &item4 .urxvt/ext/tabbed-custom
+    dest: *item4
+
+common_scripts:
+  - src: git/git_clean_local_branches.sh

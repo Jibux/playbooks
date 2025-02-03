@@ -1,0 +1,3 @@
+/data/Music/:Music/
+/data/Photos-Images/:Photos-Images/
+/data/Videos/:Videos/

@@ -1,15 +1,15 @@
 ---
 - set_fact:
-    setup_file_dest: "{{ (home_dir + '/' + setup_file.dest) if setup_file.dest[0] != '/' else setup_file.dest }}"
+    setup_file_dest: "{{ (setup_files_dest_root | d(home_dir) + '/' + setup_file.dest) if setup_file.dest[0] != '/' else setup_file.dest }}"
   when: setup_file.dest is defined
 
 - set_fact:
-    setup_file_dest: "{{ home_dir }}/{{ setup_file.src }}"
+    setup_file_dest: "{{ setup_files_dest_root | d(home_dir) }}/{{ setup_file.src | basename }}"
   when: setup_file.dest is not defined
 
 - set_fact:
     setup_file_kind: "{{ setup_file.kind | d('file') }}"
-    setup_file_src: "{{ project_root_path }}/{{ setup_files_root }}/{{ setup_file.src }}"
+    setup_file_src: "{{ project_root_path }}/{{ setup_files_src_root }}/{{ setup_file.src }}"
     setup_file_dir: "{{ setup_file_dest | dirname }}"
     setup_file_dest_bkp: "{{ setup_file_dest }}.bkp_by_ansible"
 

@@ -18,7 +18,7 @@
         - config_files
   vars:
     setup_files: "{{ config_files }}"
-    setup_files_root: config
+    setup_files_src_root: config
   tags:
     - setup_files
     - config_files
@@ -31,7 +31,21 @@
         - git_files
   vars:
     setup_files: "{{ git_files }}"
-    setup_files_root: .git_repositories
+    setup_files_src_root: .git_repositories
   tags:
     - setup_files
     - git_files
+
+- include_tasks:
+    file: setup_files.yml
+    apply:
+      tags:
+        - setup_files
+        - scripts
+  vars:
+    setup_files: "{{ common_scripts + specific_scripts }}"
+    setup_files_src_root: scripts
+    setup_files_dest_root: "{{ user_home_dir }}/bin"
+  tags:
+    - setup_files
+    - scripts
