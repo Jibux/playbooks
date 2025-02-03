@@ -303,8 +303,8 @@ else
 	umask 022
 fi
 
-[ -f "$HOME/.bashrc.local" ] && . "$HOME/.bashrc.local" || true
 [ -f "$HOME/.bashrc.ansible" ] && . "$HOME/.bashrc.ansible" || true
+[ -f "$HOME/.bashrc.local" ] && . "$HOME/.bashrc.local" || true
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" || true  # This loads nvm
