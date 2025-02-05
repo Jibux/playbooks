@@ -15,7 +15,6 @@ trap fail ERR
 
 SCRIPT_ROOT_PATH="$(dirname "$(realpath "$0")")"
 VENV_DIR="$SCRIPT_ROOT_PATH/.venv"
-VENV_ACTIVATE="$VENV_DIR/bin/activate"
 
 echo "SCRIPT_ROOT_PATH: $SCRIPT_ROOT_PATH"
 echo "VENV_DIR: $VENV_DIR"
@@ -38,8 +37,6 @@ fi
 
 uv venv --directory "$SCRIPT_ROOT_PATH"
 uv pip install -r "$SCRIPT_ROOT_PATH/requirements.txt"
-# shellcheck disable=SC1090
-. "$VENV_ACTIVATE"
 
 (export bin_path=$HOME/.local/bin && curl -sfL https://direnv.net/install.sh | bash)
 direnv allow "$SCRIPT_ROOT_PATH"
