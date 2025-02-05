@@ -1,5 +1,14 @@
 # Ansible playbooks to setup my computers
 
+## Install
+
+```
+sudo apt update && sudo apt install curl git
+git clone git@github.com:Jibux/personal_ansible
+cd personal_ansible
+./install_ansible.sh
+```
+
 ## Desktop setup
 
 ```
