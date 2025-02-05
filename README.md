@@ -1,4 +1,4 @@
-# Ansible playbook to install my home services
+# Ansible playbooks to setup my computers
 
 ## Desktop setup
 
