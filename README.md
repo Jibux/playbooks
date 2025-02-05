@@ -1,5 +1,23 @@
 # Ansible playbook to install my home services
 
+## Desktop setup
+
+```
+ansible-playbook playbooks/desktop.yml -l jibux-taf -D 
+```
+
+### Just packages
+
+```
+ansible-playbook playbooks/packages.yml -l jibux-taf -D 
+```
+
+### Just config and scripts
+
+```
+ansible-playbook playbooks/setup_files.yml -l jibux-taf -D 
+```
+
 ## Jibux services
 
 See [README.md](roles/jibux_svc/README.md).
