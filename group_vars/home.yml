@@ -1,5 +1,6 @@
 ---
 specific_scripts:
+  - src: misc/fix_rights_for_share.sh
   - src: darktable/darktable_custom.sh
   - src: darktable/pictures_tool.sh
   - src: darktable/purge_pictures.sh
