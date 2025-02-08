@@ -45,8 +45,8 @@ function usage {
 	exit 0
 }
 
-initPath="/home/jibux/scripts/global/backup"
-logPath="$initPath/logs"
+ROOT_PATH="$(dirname "$(realpath "$0")")"
+logPath="$ROOT_PATH/logs"
 backupLog="$logPath/backup.log"
 errorLog="$logPath/error.log"
 
@@ -60,7 +60,7 @@ includeFile="include.txt"
 excludeFile="exclude.txt"
 
 # Arguments testing
-TEMP=$(getopt -n$0 -o hvfcFi:e: -l help,verbose -- "$@")
+TEMP=$(getopt -n"$0" -o hvfcFi:e: -l help,verbose -- "$@")
 
 if test $? != 0
 then
@@ -101,6 +101,7 @@ checkExistence "$backupParameters" 1
 prefixPathToSave=""
 
 # import variables
+# shellcheck disable=SC1090
 source "$backupParameters"
 
 includeFile="$backupFolder$includeFile"
@@ -108,6 +109,7 @@ excludeFile="$backupFolder$excludeFile"
 
 if [ $debug -eq 1 ]
 then
+	# shellcheck disable=SC2154
 	echo -e "path: $path"
 	echo -e "backupFolder: $backupFolder"
 	echo -e "includeFile: $includeFile"
@@ -160,7 +162,7 @@ done < "$includeFile"
 
 if [ $debug -eq 1 ]
 then
-	echo -e "\n\n"$rsyncCommand"\n"
+	echo -e "\n\n$rsyncCommand\n"
 fi
 
 if [ $forceyes -eq 0 ]

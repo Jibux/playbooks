@@ -1,5 +1,7 @@
 #!/bin/bash
 
 
-/home/jibux/scripts/backup/backup.sh -vF /home/jibux/scripts/backup/restore_from_nas_family/
+ROOT_PATH="$(dirname "$(realpath "$0")")"
+
+"$ROOT_PATH/backup.sh" -vF "$ROOT_PATH/restore_from_nas_family/"
 

@@ -1,3 +1,7 @@
 #!/bin/bash
 
-/home/jibux/scripts/global/backup/backup.sh -vfc /home/jibux/scripts/global/backup/X7/
+
+ROOT_PATH="$(dirname "$(realpath "$0")")"
+
+"$ROOT_PATH/backup.sh" -vfc "$ROOT_PATH/X7/"
+
