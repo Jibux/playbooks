@@ -1,10 +1,10 @@
 ---
 specific_scripts:
-  - src: scripts/darktable/darktable_custom.sh
-  - src: scripts/darktable/pictures_tool.sh
-  - src: scripts/darktable/purge_pictures.sh
-  - src: scripts/darktable/copy_darktable_dev.sh
-  - src: scripts/darktable/organize_pictures.sh
-  - src: scripts/backup/backup_nas.sh
-  - src: scripts/backup/backup_nas_family.sh
-  - src: scripts/backup/X7.sh
+  - src: darktable/darktable_custom.sh
+  - src: darktable/pictures_tool.sh
+  - src: darktable/purge_pictures.sh
+  - src: darktable/copy_darktable_dev.sh
+  - src: darktable/organize_pictures.sh
+  - src: backup/backup_nas.sh
+  - src: backup/backup_nas_family.sh
+  - src: backup/X7.sh
